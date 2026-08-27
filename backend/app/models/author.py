@@ -1,9 +1,10 @@
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.db import Base, CommonMixin
-from app.models.question import Question
+if TYPE_CHECKING:
+    from app.models.question import Question
 
 
 class Author(Base, CommonMixin):

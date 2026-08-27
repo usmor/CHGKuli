@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 
-from sqlalchemy import DateTime, String
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base, CommonMixin
@@ -11,7 +10,7 @@ if TYPE_CHECKING:
 
 class Tournament(Base, CommonMixin):
     name: Mapped[str] = mapped_column(String, nullable=False)
-    date: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     questions: Mapped[List["Question"]] = relationship(
         "Question",
