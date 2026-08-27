@@ -1,8 +1,7 @@
-from datetime import datetime
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 from app.schemas.author import Author
 from app.schemas.tournament import Tournament
@@ -14,7 +13,6 @@ class QuestionBase(BaseModel):
     pass_criteria: Optional[str] = Field(None, description="Критерии зачета")
     comment: Optional[str] = Field(None, description="Комментарий")
     tournament_id: int = Field(..., description="ID турнира")
-    author_ids: List[int] = Field(..., description="ID авторов")
 
     class Config:
         extra = 'forbid'
@@ -24,6 +22,15 @@ class Question(QuestionBase):
     id: int
     tournament: Optional[Tournament] = None
     authors: List[Author] = []
+
+    @computed_field
+    @property
+    def author_ids(self) -> List[int]:
+        """Получить список ID авторов из authors"""
+        return [a.id for a in self.authors]
+
+    class Config:
+        from_attributes = True
 
 
 class QuestionListResponse(BaseModel):
@@ -39,10 +46,16 @@ class QuestionMode(str, Enum):
 
 
 class QuestionSetRequest(BaseModel):
-    count: int = 10
-    mode: QuestionMode = QuestionMode.QUIZ
+    count: int = Field(10, ge=1, le=100,
+                       description="Количество вопросов")
+    mode: QuestionMode = Field(QuestionMode.QUIZ,
+                               description="Режим отображения")
+    author_id: Optional[int] = Field(None, description="ID автора")
+    tournament_id: Optional[int] = Field(None, description="ID турнира")
+    year_from: Optional[int] = Field(None, ge=1800, le=2100,
+                                     description="Год от")
+    year_to: Optional[int] = Field(None, ge=1800, le=2100,
+                                   description="Год до")
 
-    author_id: Optional[int] = None
-    tournament_id: Optional[int] = None
-    date_from: Optional[datetime] = None
-    date_to: Optional[datetime] = None
+    class Config:
+        extra = 'forbid'
