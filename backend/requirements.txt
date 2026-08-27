@@ -17,6 +17,7 @@ python-dotenv==1.2.2
 PyYAML==6.0.3
 SQLAlchemy==2.0.30
 starlette==0.41.3
+tqdm==4.70.0
 typing-inspection==0.4.4
 typing_extensions==4.16.0
 uvicorn==0.32.1
