@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.app.json",
+  "baseUrl": "..",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.tsx",
+    "../src/**/*"
+  ],
+  "exclude": []
+}

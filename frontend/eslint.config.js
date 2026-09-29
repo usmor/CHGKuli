@@ -1,6 +1,10 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import cssModulesPlugin from 'eslint-plugin-css-modules';
+import postcssModules from 'eslint-plugin-postcss-modules';
 import importPlugin from 'eslint-plugin-import';
 import perfectionist from 'eslint-plugin-perfectionist';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
@@ -30,6 +34,7 @@ export default defineConfig(
   tseslint.configs.stylisticTypeChecked,
   react.configs.flat.recommended,
   react.configs.flat['jsx-runtime'],
+  storybook.configs['flat/recommended'],
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
@@ -47,6 +52,7 @@ export default defineConfig(
     },
     plugins: {
       'css-modules': cssModulesPlugin,
+      'postcss-modules': postcssModules,
       perfectionist,
       react,
       'react-hooks': reactHooks,
@@ -90,6 +96,8 @@ export default defineConfig(
       // CSS Modules
       'css-modules/no-undef-class': 'error',
       'css-modules/no-unused-class': 'warn',
+      "postcss-modules/no-undef-class": "error",
+      "postcss-modules/no-unused-class": "warn",
 
       // Imports
       'import/no-unresolved': 'error',
@@ -162,6 +170,10 @@ export default defineConfig(
           '.css': 'postcss',
           '.module.css': 'postcss',
         },
+      },
+       "postcss-modules": {
+        include: "**/*.module.(css|scss)",
+        exclude: "**/node_modules/**/*",
       },
       react: {
         version: 'detect',

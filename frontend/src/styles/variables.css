@@ -2,7 +2,7 @@
   --black: #000;
 
   /* переменные, связанные с текстом */
-  --main-font: "Inter-Variable";
+  --main-font: 'Inter-Variable';
   --main-text-color: var(--black);
   --main-font-weight: 400;
 }
