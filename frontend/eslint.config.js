@@ -20,6 +20,7 @@ export default defineConfig(
     ignores: [
       '*.config.*',
       '**/*.d.ts',
+      '**/*.d.css.ts',
       'dist',
       'node_modules',
       'package*.json',
@@ -181,7 +182,7 @@ export default defineConfig(
       'import/resolver': {
         typescript: {
           alwaysTryTypes: true,
-          project: './tsconfig.json',
+          project: ['./tsconfig.app.json', './tsconfig.json'],
         },
       },
     },

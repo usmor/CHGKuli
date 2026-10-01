@@ -1,3 +1,5 @@
+@import url('@mantine/core/styles.css');
 @import url('./fonts.css');
 @import url('./variables.css');
 @import url('./globals.css');
+@import url('./typography.css');
