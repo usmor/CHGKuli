@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
@@ -11,8 +12,9 @@
       { "name": "typescript-plugin-css-modules" }
     ],
     "paths": {
+      "@/*": ["src/*"],
+      "@app": ["src/app"],
       "@styles/*": ["src/styles/*"],
-      "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"]
     },
 
