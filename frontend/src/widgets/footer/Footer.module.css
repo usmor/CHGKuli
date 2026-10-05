@@ -1,0 +1,16 @@
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: auto;
+  padding: 16px 0;
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  width: 100%;
+}
