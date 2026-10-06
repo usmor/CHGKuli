@@ -2,18 +2,7 @@ import { Button, Group, Stack, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
 import classes from './Banner.module.css';
-
-type StatProps = {
-  value: string;
-  label: string;
-};
-
-const Stat = ({ value, label }: StatProps): React.JSX.Element => (
-  <div>
-    <Text className={classes.statValue}>{value}</Text>
-    <Text className={classes.statLabel}>{label}</Text>
-  </div>
-);
+import { Stat } from '@/shared/ui';
 
 export const BannerUI = (): React.JSX.Element => {
   return (

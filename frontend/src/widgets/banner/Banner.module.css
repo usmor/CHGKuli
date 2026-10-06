@@ -38,16 +38,6 @@
   margin-top: 8px;
 }
 
-.statValue {
-  font-size: 24px;
-}
-
-.statLabel {
-  color: var(--mantine-color-dimmed);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
 .video {
   display: block;
   align-self: stretch;

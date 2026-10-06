@@ -5,8 +5,6 @@ declare const classNames: {
   readonly title: "title";
   readonly image: "image";
   readonly stats: "stats";
-  readonly statValue: "statValue";
-  readonly statLabel: "statLabel";
   readonly video: "video";
 };
 export default classNames;
