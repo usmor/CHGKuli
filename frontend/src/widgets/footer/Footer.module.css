@@ -3,7 +3,8 @@
   flex-direction: column;
   gap: 15px;
   margin-top: auto;
-  padding: 16px 0;
+  padding-bottom: 25px;
+  padding-top: 10px;
 }
 
 .inner {

@@ -1,4 +1,5 @@
-import { Anchor, Container, Group, Text } from '@mantine/core';
+import { Container, Group, Text } from '@mantine/core';
+import { Link } from '@shared/ui/link';
 
 import classes from './Footer.module.css';
 
@@ -16,26 +17,22 @@ export const FooterUI = ({
       <Container size="lg" className={classes.inner}>
         <Text>© {new Date().getFullYear()} CHGKuli</Text>
         <Group gap="lg">
-          <Anchor
-            c="var(--purple-haze)"
+          <Link
             href={sourceUrl}
+            text="Источник данных"
             target="_blank"
             rel="noopener noreferrer"
-          >
-            Источник данных
-          </Anchor>
-          <Anchor
             c="var(--purple-haze)"
+          />
+          <Link
             href={githubUrl}
+            text="Исходный код"
             target="_blank"
             rel="noopener noreferrer"
-          >
-            Исходный код
-          </Anchor>
+            c="var(--purple-haze)"
+          />
         </Group>
-        <Anchor href="#" c="var(--soft-blue)">
-          Cкорее наверх ↑
-        </Anchor>
+        <Link href="#" text="Скорее наверх ↑" c="var(--soft-blue)" />
       </Container>
       <Container className={classes.inner} ta="center" display="block">
         <Text size="xs" c="dimmed">
