@@ -1,5 +1,5 @@
-import { Footer } from '@/widgets/footer';
-import { Header } from '@/widgets/header';
+import { Footer } from '@widgets/footer';
+import { Header } from '@widgets/header';
 
 import styles from './App.module.css';
 
