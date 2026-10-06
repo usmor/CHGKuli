@@ -32,7 +32,7 @@ export const FooterUI = ({
             c="var(--purple-haze)"
           />
         </Group>
-        <Link href="#" text="Скорее наверх ↑" c="var(--soft-blue)" />
+        <Link href="#" text="Скорее наверх ↑" c="var(--purple-haze)" />
       </Container>
       <Container className={classes.inner} ta="center" display="block">
         <Text size="xs" c="dimmed">

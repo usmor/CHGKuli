@@ -3,3 +3,14 @@
   flex-direction: column;
   height: 100vh;
 }
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 60%;
+  max-width: 1440px;
+  min-height: 75vh;
+  padding-inline: 100px;
+  padding-block: 70px;
+}
