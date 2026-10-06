@@ -1,6 +1,17 @@
-import type { Preview } from '@storybook/react-vite';
+import { MantineProvider } from '@mantine/core';
+import { MemoryRouter } from 'react-router-dom';
+
+import type { Decorator, Preview } from '@storybook/react-vite';
 
 import '../src/styles/index.css';
+
+const withProviders: Decorator = (Story) => (
+  <MantineProvider defaultColorScheme="light">
+    <MemoryRouter>
+      <Story />
+    </MemoryRouter>
+  </MantineProvider>
+);
 
 const preview: Preview = {
   parameters: {
@@ -18,6 +29,7 @@ const preview: Preview = {
       test: 'todo',
     },
   },
+  decorators: [withProviders],
 };
 
 export default preview;

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "eslint": "eslint src/ --fix",
+    "eslint": "eslint . --fix",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,html,css,md}\"",
     "stylelint": "stylelint \"src/**/*.css\" --fix",
     "lint": "npm run stylelint && npm run eslint && npm run prettier",
