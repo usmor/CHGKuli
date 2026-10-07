@@ -1,4 +1,5 @@
 import { Text } from '@mantine/core';
+
 import classes from './Stat.module.css';
 
 type StatProps = {

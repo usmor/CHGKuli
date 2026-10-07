@@ -1,8 +1,9 @@
 import { Button, Group, Stack, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
-import classes from './Banner.module.css';
 import { Stat } from '@/shared/ui';
+
+import classes from './Banner.module.css';
 
 export const BannerUI = (): React.JSX.Element => {
   return (
@@ -46,14 +47,6 @@ export const BannerUI = (): React.JSX.Element => {
         playsInline
         preload="metadata"
       />
-      {/* <Image
-        src="/banner.jpg"
-        alt={'Баннер'}
-        className={classes.image}
-        fit="cover"
-        w={450}
-        
-      /> */}
     </section>
   );
 };

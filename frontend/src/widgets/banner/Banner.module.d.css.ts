@@ -3,7 +3,6 @@ declare const classNames: {
   readonly content: "content";
   readonly subtitle: "subtitle";
   readonly title: "title";
-  readonly image: "image";
   readonly stats: "stats";
   readonly video: "video";
 };
