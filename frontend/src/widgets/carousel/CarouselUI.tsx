@@ -3,24 +3,27 @@ import { Container, Title, Text } from '@mantine/core';
 import Autoplay from 'embla-carousel-autoplay';
 import { useRef, type ReactNode } from 'react';
 
-import '@mantine/carousel/styles.css';
-
-import classes from './Сarousel.module.css';
+import classes from './Carousel.module.css';
 
 type CarouselUIProps = {
   items: ReactNode[];
 };
 
 export const CarouselUI = ({ items }: CarouselUIProps): React.JSX.Element => {
+  console.log(classes);
   const autoplay = useRef(Autoplay({ delay: 2000 }));
   return (
-    <Container size="lg">
+    <Container size="lg" className={classes.container}>
       <Title order={2} mb="md">
         Вопросы дня
       </Title>
       {items.length > 0 ? (
         <Carousel
-          classNames={classes}
+          classNames={{
+            control: classes.control,
+            indicators: classes.indicators,
+            indicator: classes.indicator,
+          }}
           slideSize={{ base: '100%', sm: '50%', md: '33.333%' }}
           slideGap="md"
           withControls

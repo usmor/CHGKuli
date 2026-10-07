@@ -1,4 +1,13 @@
-.control {
+.container {
+  width: 100%;
+}
+
+.container :global(.mantine-Carousel-controls) {
+  right: -50px;
+  left: -50px;
+}
+
+.control.control {
   color: var(--white);
   background-color: var(--easter-purple);
   border: none;
@@ -9,11 +18,11 @@
   }
 }
 
-.indicators {
+.indicators.indicators {
   bottom: -32px;
 }
 
-.indicator {
+.indicator.indicator {
   width: 20px;
   height: 8px;
   background-color: var(--soft-blue);

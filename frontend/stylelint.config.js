@@ -4,6 +4,12 @@ const config = {
   ignoreFiles: ['**/fonts/', '**/images/'],
   plugins: ['stylelint-order'],
   rules: {
+    'selector-pseudo-class-no-unknown': [
+      true,
+      {
+        "ignorePseudoClasses": ["global"]
+      }
+    ],
     'at-rule-empty-line-before': [
       'always',
       {
