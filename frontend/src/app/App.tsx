@@ -1,6 +1,8 @@
 import { Header, Footer } from '@widgets/index';
 import { Route, Routes } from 'react-router-dom';
 
+import { Home } from '@/pages';
+
 import classes from './App.module.css';
 
 const App = (): React.JSX.Element => {

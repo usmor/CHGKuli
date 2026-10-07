@@ -1,7 +1,7 @@
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .main {
@@ -12,5 +12,5 @@
   max-width: 1440px;
   min-height: 75vh;
   padding-inline: 100px;
-  padding-block: 70px;
+  padding-block: 60px 100px;
 }

@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { theme } from './theme';
 
+import '@mantine/core/styles.css';
+import '@mantine/carousel/styles.css';
 import '@styles/index.css';
 
 createRoot(document.getElementById('root')!).render(
