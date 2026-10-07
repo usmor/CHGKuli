@@ -1,0 +1,31 @@
+.control {
+  color: var(--white);
+  background-color: var(--easter-purple);
+  border: none;
+
+  &[data-inactive] {
+    cursor: default;
+    opacity: 0;
+  }
+}
+
+.indicators {
+  bottom: -32px;
+}
+
+.indicator {
+  width: 20px;
+  height: 8px;
+  background-color: var(--soft-blue);
+  transition: width 250ms ease;
+
+  &[data-active] {
+    width: 40px;
+  }
+}
+
+.empty {
+  padding: 32px;
+  color: var(--mantine-color-dimmed);
+  text-align: center;
+}
