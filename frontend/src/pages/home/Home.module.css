@@ -4,3 +4,9 @@
   gap: 50px;
   width: 100%;
 }
+
+.carouselContainer {
+  align-items: center;
+  align-self: center;
+  width: 90%;
+}

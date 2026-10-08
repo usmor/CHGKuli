@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional, List
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +19,7 @@ class CRUDQuestion(CRUDBase):
         tournament_id: Optional[int] = None,
         year_from: Optional[int] = None,
         year_to: Optional[int] = None,
-        relations: Optional[List[str]] = None
+        relations: Optional[List[str]] = None,
     ) -> List[Question]:
         """
         Получить случайный набор вопросов с фильтрами.
@@ -29,10 +30,8 @@ class CRUDQuestion(CRUDBase):
         if author_id:
             query = query.join(
                 question_author_association,
-                question_author_association.c.question_id == Question.id
-            ).where(
-                question_author_association.c.author_id == author_id
-            )
+                question_author_association.c.question_id == Question.id,
+            ).where(question_author_association.c.author_id == author_id)
 
         # Фильтр по турниру
         if tournament_id:
@@ -64,6 +63,35 @@ class CRUDQuestion(CRUDBase):
         query = query.offset(offset).limit(count)
         result = await session.execute(query)
 
+        return list(result.scalars().all())
+
+    async def get_daily_set(
+        self,
+        session: AsyncSession,
+        count: int = 10,
+        relations: Optional[List[str]] = None,
+    ) -> List[Question]:
+        """
+        Вопросы дня: один и тот же набор в течение дня, новый — на следующий.
+        """
+        ids_result = await session.execute(select(Question.id))
+        all_ids = list(ids_result.scalars().all())
+
+        if not all_ids:
+            return []
+
+        today_seed = int(date.today().strftime("%Y%m%d"))
+        rng = random.Random(today_seed)
+
+        selected_ids = rng.sample(all_ids, min(count, len(all_ids)))
+
+        query = select(Question).where(Question.id.in_(selected_ids))
+        if relations:
+            options = [selectinload(getattr(Question, rel)) for rel 
+                       in relations]
+            query = query.options(*options)
+
+        result = await session.execute(query)
         return list(result.scalars().all())
 
 

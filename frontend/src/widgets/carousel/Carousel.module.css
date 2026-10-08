@@ -32,9 +32,3 @@
     width: 40px;
   }
 }
-
-.empty {
-  padding: 32px;
-  color: var(--mantine-color-dimmed);
-  text-align: center;
-}

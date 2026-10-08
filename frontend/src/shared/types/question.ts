@@ -10,4 +10,5 @@ export type Question = {
   tournament_id: number;
   tournament: Tournament | null;
   authors: Author[];
+  author_ids: number[];
 };

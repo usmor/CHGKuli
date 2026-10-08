@@ -1,18 +1,37 @@
+import { CustomAlert, CustomLoader } from '@shared/ui';
+
 import { Banner, Carousel } from '@/widgets';
 
-import type { Question } from '@shared/types';
+import type { Question } from '@/shared/types';
 
 import classes from './Home.module.css';
 
 type HomeUIProps = {
   questions: Question[];
+  isLoading: boolean;
+  isError: boolean;
 };
 
-export const HomeUI = ({ questions }: HomeUIProps): React.JSX.Element => {
+export const HomeUI = ({
+  questions,
+  isLoading,
+  isError,
+}: HomeUIProps): React.JSX.Element => {
   return (
     <div className={classes.content}>
       <Banner />
-      <Carousel questions={questions} />
+      <div className={classes.carouselContainer}>
+        {isError && (
+          <CustomAlert
+            title="Не удалось загрузить вопросы дня"
+            message="Попробуйте перезагрузить страницу позже"
+          />
+        )}
+
+        {isLoading && !isError && <CustomLoader />}
+
+        {!isLoading && !isError && <Carousel questions={questions} />}
+      </div>
     </div>
   );
 };

@@ -33,6 +33,18 @@ async def get_all_questions(
         has_more=offset + limit < total
     )
 
+@router.get("/daily", response_model=list[Question])
+async def get_daily_set(
+    session: SessionDep,
+    count: int = Query(10, ge=1, le=50)
+):
+    questions = await question_crud.get_daily_set(
+        count=count,
+        session=session,
+        relations=['tournament', 'authors']
+    )
+
+    return questions
 
 @router.post("/set", response_model=List[Question])
 async def get_question_set(
