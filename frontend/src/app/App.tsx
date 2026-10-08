@@ -1,7 +1,7 @@
 import { Header, Footer } from '@widgets/index';
 import { Route, Routes } from 'react-router-dom';
 
-import { About, Home, NotFound } from '@/pages';
+import { About, Home, NotFound, QuestionDetail } from '@/pages';
 
 import classes from './App.module.css';
 
@@ -14,6 +14,7 @@ const App = (): React.JSX.Element => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/all-questions" element={<div>Все вопросы + фильтры</div>} />
+          <Route path="/questions/:id" element={<QuestionDetail />} />
           <Route path="/game" element={<div>Игроровой режим</div>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

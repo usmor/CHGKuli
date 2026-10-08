@@ -1,7 +1,7 @@
 import { fetcher } from '@shared/lib/api/fetcher';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
-import type { Question } from '@/shared/types';
+import type { Question } from '@shared/types';
 
 export const useDailyQuestions = (count = 10): UseQueryResult<Question[], Error> => {
   return useQuery<Question[], Error>({
