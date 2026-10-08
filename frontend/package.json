@@ -32,6 +32,7 @@
     "@mantine/carousel": "^9.7.1",
     "@mantine/core": "^9.6.3",
     "@mantine/hooks": "^9.6.3",
+    "@phosphor-icons/react": "^2.1.10",
     "clsx": "^2.1.1",
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
