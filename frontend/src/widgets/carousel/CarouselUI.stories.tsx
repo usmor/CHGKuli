@@ -5,6 +5,9 @@ import { CarouselUI } from './CarouselUI';
 import type { Question } from '@shared/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import '@mantine/core/styles.css';
+import '@mantine/carousel/styles.css';
+
 const meta: Meta<typeof CarouselUI> = {
   title: 'Widgets/Carousel/CarouselUI',
   component: CarouselUI,
@@ -33,6 +36,7 @@ const baseQuestion: Question = {
     year: 2023,
   },
   authors: [{ id: 1, name: 'Юлия Дидбаридзе' }],
+  author_ids: [1],
 };
 
 const createQuestion = (id: number): Question => ({
