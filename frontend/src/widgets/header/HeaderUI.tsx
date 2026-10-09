@@ -17,7 +17,7 @@ type HeaderUIProps = {
 
 const defaultNavItems: NavItem[] = [
   { label: 'О проекте', to: '/about' },
-  { label: 'Все, что есть', to: '/all-questions' },
+  { label: 'Все, что есть', to: '/questions' },
   { label: 'Игра', to: '/game' },
 ];
 

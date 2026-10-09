@@ -27,7 +27,7 @@ export const BannerUI = (): React.JSX.Element => {
         <Group gap="md" mt="md">
           <Button
             component={Link}
-            to="/all-questions"
+            to="/questions"
             size="md"
             color="var(--easter-purple)"
           >

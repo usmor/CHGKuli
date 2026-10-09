@@ -1,26 +1,25 @@
+import random
 from datetime import date
-from typing import Optional, List
-from sqlalchemy import select, func
+
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-import random
 
 from app.crud.base import CRUDBase
 from app.models import Question, Tournament, question_author_association
 
 
 class CRUDQuestion(CRUDBase):
-
     async def get_random_set(
         self,
         session: AsyncSession,
         count: int = 10,
-        author_id: Optional[int] = None,
-        tournament_id: Optional[int] = None,
-        year_from: Optional[int] = None,
-        year_to: Optional[int] = None,
-        relations: Optional[List[str]] = None,
-    ) -> List[Question]:
+        author_id: int | None = None,
+        tournament_id: int | None = None,
+        year_from: int | None = None,
+        year_to: int | None = None,
+        relations: list[str] | None = None,
+    ) -> list[Question]:
         """
         Получить случайный набор вопросов с фильтрами.
         """
@@ -56,8 +55,7 @@ class CRUDQuestion(CRUDBase):
         offset = random.randint(0, max(0, total - count))
 
         if relations:
-            options = [selectinload(getattr(Question, rel))
-                       for rel in relations]
+            options = [selectinload(getattr(Question, rel)) for rel in relations]
             query = query.options(*options)
 
         query = query.offset(offset).limit(count)
@@ -69,8 +67,8 @@ class CRUDQuestion(CRUDBase):
         self,
         session: AsyncSession,
         count: int = 10,
-        relations: Optional[List[str]] = None,
-    ) -> List[Question]:
+        relations: list[str] | None = None,
+    ) -> list[Question]:
         """
         Вопросы дня: один и тот же набор в течение дня, новый — на следующий.
         """
@@ -87,12 +85,39 @@ class CRUDQuestion(CRUDBase):
 
         query = select(Question).where(Question.id.in_(selected_ids))
         if relations:
-            options = [selectinload(getattr(Question, rel)) for rel 
-                       in relations]
+            options = [selectinload(getattr(Question, rel)) for rel in relations]
             query = query.options(*options)
 
         result = await session.execute(query)
         return list(result.scalars().all())
+
+    async def get_multi_with_pagination(
+        self,
+        session: AsyncSession,
+        skip: int = 0,
+        limit: int = 20,
+        relations: list[str] | None = None,
+    ):
+        query = select(Question)
+
+        # Псевдо-случайный порядок — стабильный для каждого id
+        hash_expr = (Question.id * 2654435761) % 4294967296
+
+        query = query.order_by(hash_expr)
+
+        if relations:
+            options = [selectinload(getattr(Question, rel)) for rel in relations]
+            query = query.options(*options)
+
+        count_result = await session.execute(
+            select(func.count()).select_from(query.subquery())
+        )
+        total = count_result.scalar()
+
+        query = query.offset(skip).limit(limit)
+        result = await session.execute(query)
+
+        return list(result.scalars().all()), total
 
 
 question_crud = CRUDQuestion(Question)
