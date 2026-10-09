@@ -1,19 +1,19 @@
 import pickle
-import sys
 import re
+import sys
 from collections import Counter
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, Dict, List, Any
 from tqdm import tqdm
 
-from app.models import (Author, Tournament, Question,
-                        question_author_association)
 from app.core.db import AsyncSessionLocal
+from app.models import Author, Question, Tournament, question_author_association
 
 
-def parse_year(year_str: str) -> Optional[int]:
+def parse_year(year_str: str) -> int | None:
     """
     Парсинг года из строки.
     """
@@ -24,7 +24,7 @@ def parse_year(year_str: str) -> Optional[int]:
     if not year_str:
         return None
 
-    match = re.search(r'\b(\d{4})\b', year_str)
+    match = re.search(r"\b(\d{4})\b", year_str)
     if match:
         year = int(match.group(1))
         if 1800 <= year <= 2100:
@@ -32,10 +32,10 @@ def parse_year(year_str: str) -> Optional[int]:
     return None
 
 
-def load_pickle_data(file_path: str = "chgk_data.pkl") -> Dict[str, Any]:
+def load_pickle_data(file_path: str = "chgk_data.pkl") -> dict[str, Any]:
     """Загрузка данных из pickle файла"""
     print("Загрузка данных из chgk_data.pkl файла...")
-    with open(file_path, 'rb') as f:
+    with open(file_path, "rb") as f:
         data = pickle.load(f)
 
     print("Загружено:")
@@ -46,31 +46,26 @@ def load_pickle_data(file_path: str = "chgk_data.pkl") -> Dict[str, Any]:
     return data
 
 
-async def import_authors(db: AsyncSession, authors_data: List[Dict]) -> int:
+async def import_authors(db: AsyncSession, authors_data: list[dict]) -> int:
     """Импорт авторов из данных"""
 
     print("Импортируем авторов...")
     count = 0
     with tqdm(total=len(authors_data), desc="Авторы", unit="шт") as pbar:
         for item in authors_data:
-            name = item.get('name')
+            name = item.get("name")
             if name:
                 result = await db.execute(
-                    select(Author).where(Author.id == item.get('id'))
+                    select(Author).where(Author.id == item.get("id"))
                 )
                 existing = result.scalar_one_or_none()
 
                 if not existing:
-                    result = await db.execute(
-                        select(Author).where(Author.name == name)
-                    )
+                    result = await db.execute(select(Author).where(Author.name == name))
                     existing = result.scalar_one_or_none()
 
                 if not existing:
-                    author = Author(
-                        id=item.get('id'),
-                        name=name
-                    )
+                    author = Author(id=item.get("id"), name=name)
                     db.add(author)
                     count += 1
             pbar.update(1)
@@ -80,24 +75,22 @@ async def import_authors(db: AsyncSession, authors_data: List[Dict]) -> int:
     return count
 
 
-async def import_tournaments(db: AsyncSession,
-                             tournaments_data: List[Dict]) -> int:
+async def import_tournaments(db: AsyncSession, tournaments_data: list[dict]) -> int:
     """Импорт турниров из данных"""
     print("Импортируем турниры...")
 
     count = 0
     with tqdm(total=len(tournaments_data), desc="Турниры", unit="шт") as pbar:
         for item in tournaments_data:
-            name = item.get('title')
-            year_str = item.get('date', '')
+            name = item.get("title")
+            year_str = item.get("date", "")
             if name:
                 result = await db.execute(
-                    select(Tournament).where(Tournament.id == item.get('id'))
+                    select(Tournament).where(Tournament.id == item.get("id"))
                 )
                 existing = result.scalar_one_or_none()
 
                 if not existing:
-
                     result = await db.execute(
                         select(Tournament).where(Tournament.name == name)
                     )
@@ -105,11 +98,7 @@ async def import_tournaments(db: AsyncSession,
 
                 if not existing:
                     year = parse_year(year_str)
-                    tournament = Tournament(
-                        id=item.get('id'),
-                        name=name,
-                        year=year
-                    )
+                    tournament = Tournament(id=item.get("id"), name=name, year=year)
                     db.add(tournament)
                     count += 1
             pbar.update(1)
@@ -120,9 +109,7 @@ async def import_tournaments(db: AsyncSession,
 
 
 async def import_questions(
-    db: AsyncSession,
-    questions_data: List[Dict],
-    existing_author_ids: set
+    db: AsyncSession, questions_data: list[dict], existing_author_ids: set
 ) -> int:
     """
     Импорт вопросов из данных.
@@ -135,31 +122,30 @@ async def import_questions(
     skip_reasons = Counter()
     questions_without_authors = 0
 
-
     with tqdm(total=len(questions_data), desc="Вопросы", unit="шт") as pbar:
         for item in questions_data:
-            question_text = item.get('question_text')
-            answer = item.get('answer')
-            tournament_id = item.get('tournament_id')
-            author_ids = item.get('author_ids', [])
+            question_text = item.get("question_text")
+            answer = item.get("answer")
+            tournament_id = item.get("tournament_id")
+            author_ids = item.get("author_ids", [])
 
             # Проверка: есть ли текст вопроса
             if not question_text:
-                skip_reasons['no_question_text'] += 1
+                skip_reasons["no_question_text"] += 1
                 skipped += 1
                 pbar.update(1)
                 continue
 
             # Проверка: есть ли ответ
             if not answer:
-                skip_reasons['no_answer'] += 1
+                skip_reasons["no_answer"] += 1
                 skipped += 1
                 pbar.update(1)
                 continue
 
             # Проверка: есть ли tournament_id
             if not tournament_id:
-                skip_reasons['no_tournament_id'] += 1
+                skip_reasons["no_tournament_id"] += 1
                 skipped += 1
                 pbar.update(1)
                 continue
@@ -171,7 +157,7 @@ async def import_questions(
             tournament = result.scalar_one_or_none()
 
             if not tournament:
-                skip_reasons['tournament_not_found'] += 1
+                skip_reasons["tournament_not_found"] += 1
                 skipped += 1
                 pbar.update(1)
                 continue
@@ -183,13 +169,12 @@ async def import_questions(
             # Проверяем всех авторов - все должны существовать в БД
             unique_author_ids = list(set(author_ids))
             invalid_authors = [
-                aid for aid in unique_author_ids
-                if aid not in existing_author_ids
+                aid for aid in unique_author_ids if aid not in existing_author_ids
             ]
 
             # Если есть некорректные ID - пропускаем вопрос
             if invalid_authors:
-                skip_reasons['invalid_author_ids'] += 1
+                skip_reasons["invalid_author_ids"] += 1
                 skipped += 1
                 pbar.update(1)
                 continue
@@ -198,13 +183,13 @@ async def import_questions(
             result = await db.execute(
                 select(Question).where(
                     Question.question_text == question_text,
-                    Question.tournament_id == tournament_id
+                    Question.tournament_id == tournament_id,
                 )
             )
             existing = result.scalar_one_or_none()
 
             if existing:
-                skip_reasons['duplicate'] += 1
+                skip_reasons["duplicate"] += 1
                 skipped += 1
                 pbar.update(1)
                 continue
@@ -213,9 +198,9 @@ async def import_questions(
             question = Question(
                 question_text=question_text.strip(),
                 answer=answer.strip(),
-                pass_criteria=item.get('pass_criteria', '').strip() or None,
-                comment=item.get('comment', '').strip() or None,
-                tournament_id=tournament_id
+                pass_criteria=item.get("pass_criteria", "").strip() or None,
+                comment=item.get("comment", "").strip() or None,
+                tournament_id=tournament_id,
             )
             db.add(question)
             await db.flush()
@@ -223,8 +208,7 @@ async def import_questions(
             # Добавляем связи с авторами
             for author_id in unique_author_ids:
                 stmt = sqlite_insert(question_author_association).values(
-                    question_id=question.id,
-                    author_id=author_id
+                    question_id=question.id, author_id=author_id
                 )
                 stmt = stmt.prefix_with("OR IGNORE")
                 await db.execute(stmt)
@@ -239,9 +223,9 @@ async def import_questions(
     await db.commit()
 
     # Выводим статистику
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("📊 ДЕТАЛЬНАЯ СТАТИСТИКА ИМПОРТА ВОПРОСОВ")
-    print("="*60)
+    print("=" * 60)
 
     print(f"\n✅ Успешно импортировано: {count}")
     print(f"❌ Всего пропущено: {skipped}")
@@ -249,15 +233,16 @@ async def import_questions(
     if skip_reasons:
         print("\n📋 ПРИЧИНЫ ПРОПУСКОВ:")
         total_skipped = sum(skip_reasons.values())
-        for reason, cnt in sorted(skip_reasons.items(), key=lambda x: x[1],
-                                  reverse=True):
+        for reason, cnt in sorted(
+            skip_reasons.items(), key=lambda x: x[1], reverse=True
+        ):
             pct = cnt / total_skipped * 100 if total_skipped > 0 else 0
             print(f"  • {reason}: {cnt} ({pct:.1f}%)")
 
     print("\n📊 СТАТИСТИКА ПО АВТОРАМ:")
     print(f"  • Вопросов без авторов: {questions_without_authors}")
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
 
     return count
 
@@ -269,26 +254,25 @@ async def import_all_data(pickle_path: str = "chgk_data.pkl"):
             data = load_pickle_data(pickle_path)
 
             # 1. Импортируем авторов
-            if data.get('authors'):
-                await import_authors(db, data['authors'])
+            if data.get("authors"):
+                await import_authors(db, data["authors"])
             else:
                 print("Данные авторов не найдены")
 
             # 2. Импортируем турниры
-            if data.get('tournaments'):
-                await import_tournaments(db, data['tournaments'])
+            if data.get("tournaments"):
+                await import_tournaments(db, data["tournaments"])
             else:
                 print("Данные турниров не найдены")
 
             # 3. Импортируем вопросы
-            if data.get('questions'):
+            if data.get("questions"):
                 result = await db.execute(select(Author.id))
                 existing_author_ids = {row[0] for row in result.all()}
 
                 print(f"\n✅ В БД найдено {len(existing_author_ids)} авторов")
 
-                await import_questions(db, data['questions'],
-                                       existing_author_ids)
+                await import_questions(db, data["questions"], existing_author_ids)
             else:
                 print("Данные вопросов не найдены")
 

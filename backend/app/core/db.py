@@ -1,9 +1,6 @@
 from sqlalchemy import Integer
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import (DeclarativeBase,
-                            Mapped,
-                            declared_attr,
-                            mapped_column)
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 from app.core.config import settings
 
@@ -13,7 +10,6 @@ class Base(DeclarativeBase):
 
 
 class CommonMixin:
-
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()

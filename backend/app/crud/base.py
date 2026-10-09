@@ -1,16 +1,15 @@
-from typing import TypeVar, Optional, List, Tuple
-from sqlalchemy import select, func
+from typing import TypeVar
+
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.core.db import Base
 
-
-ModelType = TypeVar('ModelType', bound=Base)
+ModelType = TypeVar("ModelType", bound=Base)
 
 
 class CRUDBase:
-
     def __init__(self, model):
         self.model = model
 
@@ -20,16 +19,11 @@ class CRUDBase:
         session: AsyncSession,
     ):
         db_obj = await session.execute(
-            select(self.model).where(
-                self.model.id == obj_id
-            )
+            select(self.model).where(self.model.id == obj_id)
         )
         return db_obj.scalars().first()
 
-    async def get_multi(
-        self,
-        session: AsyncSession
-    ):
+    async def get_multi(self, session: AsyncSession):
         db_objs = await session.execute(select(self.model))
         return db_objs.scalars().all()
 
@@ -38,14 +32,13 @@ class CRUDBase:
         session: AsyncSession,
         skip: int = 0,
         limit: int = 20,
-        relations: Optional[List[str]] = None
-    ) -> Tuple[List[ModelType], int]:
+        relations: list[str] | None = None,
+    ) -> tuple[list[ModelType], int]:
         """Для бесконечной прокрутки - вопросы с пагинацией"""
         query = select(self.model)
 
         if relations:
-            options = [selectinload(getattr(self.model, rel))
-                       for rel in relations]
+            options = [selectinload(getattr(self.model, rel)) for rel in relations]
             query = query.options(*options)
 
         count_result = await session.execute(
@@ -63,9 +56,9 @@ class CRUDBase:
         self,
         session: AsyncSession,
         count: int = 10,
-        relations: Optional[List[str]] = None,
-        **filters
-    ) -> List[ModelType]:
+        relations: list[str] | None = None,
+        **filters,
+    ) -> list[ModelType]:
         """Для случайного набора - вопросы с фильтрами"""
         query = select(self.model)
 
@@ -74,8 +67,7 @@ class CRUDBase:
                 query = query.where(getattr(self.model, key) == value)
 
         if relations:
-            options = [selectinload(getattr(self.model, rel))
-                       for rel in relations]
+            options = [selectinload(getattr(self.model, rel)) for rel in relations]
             query = query.options(*options)
 
         total_result = await session.execute(
@@ -87,6 +79,7 @@ class CRUDBase:
             return []
 
         import random
+
         offset = random.randint(0, max(0, total - count))
         query = query.offset(offset).limit(count)
 

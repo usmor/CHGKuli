@@ -2,11 +2,10 @@ from pydantic import BaseModel, Field
 
 
 class AuthorBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=255,
-                      description="Имя автора")
+    name: str = Field(..., min_length=1, max_length=255, description="Имя автора")
 
     class Config:
-        extra = 'forbid'
+        extra = "forbid"
 
 
 class Author(AuthorBase):

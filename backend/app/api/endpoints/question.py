@@ -1,12 +1,11 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated, List
 
 from app.core.db import get_async_session
 from app.crud import question_crud
-from app.schemas.question import (Question,
-                                  QuestionListResponse,
-                                  QuestionSetRequest)
+from app.schemas.question import Question, QuestionListResponse, QuestionSetRequest
 
 router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
@@ -20,37 +19,28 @@ async def get_all_questions(
 ):
     """Получить все вопросы с бесконечной прокруткой"""
     questions, total = await question_crud.get_multi_with_pagination(
-        session,
-        skip=offset,
-        limit=limit,
-        relations=['tournament', 'authors']
+        session, skip=offset, limit=limit, relations=["tournament", "authors"]
     )
 
     return QuestionListResponse(
         items=questions,
         total=total,
         next_offset=offset + limit if offset + limit < total else None,
-        has_more=offset + limit < total
+        has_more=offset + limit < total,
     )
 
+
 @router.get("/daily", response_model=list[Question])
-async def get_daily_set(
-    session: SessionDep,
-    count: int = Query(10, ge=1, le=50)
-):
+async def get_daily_set(session: SessionDep, count: int = Query(10, ge=1, le=50)):
     questions = await question_crud.get_daily_set(
-        count=count,
-        session=session,
-        relations=['tournament', 'authors']
+        count=count, session=session, relations=["tournament", "authors"]
     )
 
     return questions
 
-@router.post("/set", response_model=List[Question])
-async def get_question_set(
-    request: QuestionSetRequest,
-    session: SessionDep
-):
+
+@router.post("/set", response_model=list[Question])
+async def get_question_set(request: QuestionSetRequest, session: SessionDep):
     """
     Получить случайный набор вопросов с фильтрами.
     """
@@ -61,7 +51,7 @@ async def get_question_set(
         tournament_id=request.tournament_id,
         year_from=request.year_from,
         year_to=request.year_to,
-        relations=['tournament', 'authors']
+        relations=["tournament", "authors"],
     )
 
     if not questions:
@@ -71,10 +61,7 @@ async def get_question_set(
 
 
 @router.get("/{question_id}", response_model=Question)
-async def get_question(
-    question_id: int,
-    session: SessionDep
-):
+async def get_question(question_id: int, session: SessionDep):
     """Получить вопрос по ID"""
     question = await question_crud.get(question_id, session)
     if not question:

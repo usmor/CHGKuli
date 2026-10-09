@@ -1,16 +1,17 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated, List
 
-from app.schemas.author import Author
 from app.core.db import get_async_session
 from app.crud import author_crud
+from app.schemas.author import Author
 
 router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
-@router.get("/", response_model=List[Author])
+@router.get("/", response_model=list[Author])
 async def get_authors(
     session: SessionDep,
     skip: int = Query(0, ge=0),
@@ -18,7 +19,7 @@ async def get_authors(
 ):
     """Получить всех авторов"""
     authors = await author_crud.get_multi(session)
-    return authors[skip:skip + limit]
+    return authors[skip : skip + limit]
 
 
 @router.get("/{author_id}", response_model=Author)
@@ -33,7 +34,7 @@ async def get_author(
     return author
 
 
-@router.get("/authors/autocomplete", response_model=List[str])
+@router.get("/authors/autocomplete", response_model=list[str])
 async def autocomplete_authors(
     session: SessionDep,
     q: str = Query(..., min_length=1, description="Поисковый запрос"),
