@@ -3,3 +3,4 @@ export { ProgressBadge } from './progress-badge';
 export { Stat } from './stat';
 export { CustomLoader } from './loader';
 export { CustomAlert } from './alert';
+export { ScrollToTop } from './scroll-to-top';
