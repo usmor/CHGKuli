@@ -4,10 +4,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": [
-    "./**/*.ts",
-    "./**/*.tsx",
-    "../src/**/*"
-  ],
+  "include": ["./**/*.ts", "./**/*.tsx", "../src/**/*"],
   "exclude": []
 }

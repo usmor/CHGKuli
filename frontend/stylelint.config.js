@@ -7,8 +7,8 @@ const config = {
     'selector-pseudo-class-no-unknown': [
       true,
       {
-        "ignorePseudoClasses": ["global"]
-      }
+        ignorePseudoClasses: ['global'],
+      },
     ],
     'at-rule-empty-line-before': [
       'always',

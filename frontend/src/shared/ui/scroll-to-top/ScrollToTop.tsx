@@ -25,12 +25,7 @@ export const ScrollToTop = (): React.JSX.Element => {
   };
 
   return (
-    <Transition
-      mounted={visible}
-      transition="fade"
-      duration={200}
-      timingFunction="ease"
-    >
+    <Transition mounted={visible} transition="fade" duration={200} timingFunction="ease">
       {(styles) => (
         <div className={classes.wrapper} style={styles}>
           <Button

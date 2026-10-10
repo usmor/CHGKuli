@@ -7,9 +7,7 @@
     "types": ["vite/client"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
-    "plugins": [
-      { "name": "typescript-plugin-css-modules" }
-    ],
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "paths": {
       "@/*": ["./src/*"],
       "@app/*": ["./src/app/*"],
@@ -17,7 +15,8 @@
       "@pages/*": ["./src/pages/*"],
       "@widgets/*": ["./src/widgets/*"],
       "@entities/*": ["./src/entities/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@features/*": ["./src/features/*"]
     },
 
     /* Bundler mode */

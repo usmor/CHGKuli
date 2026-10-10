@@ -1,5 +1,5 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
+import storybook from 'eslint-plugin-storybook';
 
 import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';
@@ -97,8 +97,8 @@ export default defineConfig(
       // CSS Modules
       'css-modules/no-undef-class': 'error',
       'css-modules/no-unused-class': 'warn',
-      "postcss-modules/no-undef-class": "error",
-      "postcss-modules/no-unused-class": "warn",
+      'postcss-modules/no-undef-class': 'error',
+      'postcss-modules/no-unused-class': 'warn',
 
       // Imports
       'import/no-unresolved': 'error',
@@ -155,10 +155,7 @@ export default defineConfig(
       // React
       'react/jsx-uses-react': 'off',
       'react/prop-types': 'off',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // React Hooks
       'react-hooks/rules-of-hooks': 'error',
@@ -172,9 +169,9 @@ export default defineConfig(
           '.module.css': 'postcss',
         },
       },
-       "postcss-modules": {
-        include: "**/*.module.(css|scss)",
-        exclude: "**/node_modules/**/*",
+      'postcss-modules': {
+        include: '**/*.module.(css|scss)',
+        exclude: '**/node_modules/**/*',
       },
       react: {
         version: 'detect',
