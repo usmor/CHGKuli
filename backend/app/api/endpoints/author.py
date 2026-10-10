@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,6 +9,25 @@ from app.schemas.author import Author
 
 router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
+
+
+@router.get("/autocomplete", response_model=List[Author])
+async def autocomplete_authors(
+    session: SessionDep,
+    q: Optional[str] = Query(None, min_length=2),
+    ids: Optional[List[int]] = Query(None),
+    limit: int = Query(10, ge=1, le=20),
+):
+    """
+    Автокомплит авторов.
+    """
+    if ids:
+        return await author_crud.get_by_ids(session, ids)
+
+    if q:
+        return await author_crud.search_by_name(session, q, limit)
+
+    return []
 
 
 @router.get("/", response_model=list[Author])
@@ -32,13 +51,3 @@ async def get_author(
     if not author:
         raise HTTPException(status_code=404, detail="Автор не найден")
     return author
-
-
-@router.get("/authors/autocomplete", response_model=list[str])
-async def autocomplete_authors(
-    session: SessionDep,
-    q: str = Query(..., min_length=1, description="Поисковый запрос"),
-    limit: int = Query(10, ge=1, le=50),
-):
-    """Автодополнение имен авторов (возвращает только имена)"""
-    return await author_crud.get_names_by_query(session, q, limit)
