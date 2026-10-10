@@ -8,7 +8,9 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     '@storybook/addon-docs',
     '@storybook/addon-onboarding',
+    'msw-storybook-addon',
   ],
+  staticDirs: ['../public'],
   framework: '@storybook/react-vite',
 };
 

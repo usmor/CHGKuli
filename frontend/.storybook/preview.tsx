@@ -1,17 +1,35 @@
 import { MantineProvider } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { mswLoader } from 'msw-storybook-addon/csf3';
 import { MemoryRouter } from 'react-router-dom';
+
+import { theme } from '@/theme';
 
 import type { Decorator, Preview } from '@storybook/react-vite';
 
 import '../src/styles/index.css';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+});
+
+
 const withProviders: Decorator = (Story) => (
-  <MantineProvider defaultColorScheme="light">
-    <MemoryRouter>
-      <Story />
-    </MemoryRouter>
-  </MantineProvider>
+  <QueryClientProvider client={queryClient}>
+    <MantineProvider defaultColorScheme="light" theme={theme}>
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    </MantineProvider>
+  </QueryClientProvider>
 );
+
 
 const preview: Preview = {
   parameters: {
@@ -30,6 +48,7 @@ const preview: Preview = {
     },
   },
   decorators: [withProviders],
+  loaders: [mswLoader()],
 };
 
 export default preview;
