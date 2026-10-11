@@ -5,18 +5,6 @@
   z-index: 100;
 }
 
-.button {
-  color: var(--white);
-  font-weight: 500;
-  background-color: var(--crocus-purple);
-  transition: background-color 150ms ease;
-  padding-inline: 24px;
-}
-
-.button:hover {
-  background-color: color(srgb 0.399 0.48 0.9);
-}
-
 @media (width <= 48em) {
   .wrapper {
     right: 16px;

@@ -31,9 +31,9 @@ export const ScrollToTop = (): React.JSX.Element => {
           <Button
             onClick={handleClick}
             size="md"
-            radius="lg"
+            radius="md"
+            color="var(--soft-blue)"
             leftSection={<ArrowUpIcon size={20} weight="bold" />}
-            className={classes.button}
           >
             Наверх
           </Button>
