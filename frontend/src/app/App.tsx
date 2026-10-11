@@ -1,7 +1,7 @@
 import { Header, Footer } from '@widgets/index';
 import { Route, Routes } from 'react-router-dom';
 
-import { About, AllQuestions, Home, NotFound, QuestionDetail } from '@/pages';
+import { About, AllQuestions, Home, Login, NotFound, QuestionDetail } from '@/pages';
 
 import classes from './App.module.css';
 
@@ -12,6 +12,7 @@ const App = (): React.JSX.Element => {
       <main className={classes.main}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/questions" element={<AllQuestions />} />
           <Route path="/questions/:id" element={<QuestionDetail />} />
