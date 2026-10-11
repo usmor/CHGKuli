@@ -5,7 +5,7 @@ from app.api.endpoints import (
     question_router,
     tournament_router,
     user_router,
-    progress_router
+    progress_router,
 )
 
 main_router = APIRouter()
@@ -16,4 +16,4 @@ main_router.include_router(
 main_router.include_router(question_router, prefix="/questions", tags=["questions"])
 
 main_router.include_router(user_router)
-main_router.include_router(progress_router, prefix="/users", tags=["users"])
+main_router.include_router(progress_router, prefix="/progress", tags=["progress"])

@@ -1,4 +1,5 @@
 import { fetcher } from '@shared/lib/api/fetcher';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 
 import { AuthContext } from './AuthContext';
@@ -14,6 +15,7 @@ export const AuthProvider = ({
 }): React.JSX.Element => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   const loadUser = useCallback(async (): Promise<void> => {
     const token = localStorage.getItem(TOKEN_KEY);
@@ -24,9 +26,7 @@ export const AuthProvider = ({
     }
 
     try {
-      const data = await fetcher<User>('/users/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const data = await fetcher<User>('/users/me');
       setUser(data);
     } catch {
       localStorage.removeItem(TOKEN_KEY);
@@ -72,7 +72,8 @@ export const AuthProvider = ({
   const logout = useCallback((): void => {
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
-  }, []);
+    queryClient.clear();
+  }, [queryClient]);
 
   return (
     <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>

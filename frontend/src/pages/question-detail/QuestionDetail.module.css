@@ -25,6 +25,14 @@
   min-width: 0;
 }
 
+.button {
+  &:disabled,
+  &[data-disabled] {
+    color: var(--purple-haze);
+    background-color: var(--mantine-color-gray-3);
+  }
+}
+
 @media (width <= 48em) {
   .question {
     font-size: 22px;

@@ -1,65 +1,51 @@
-from typing import Annotated
-from app.core.user import fastapi_users
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import delete, select
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Annotated, List, Optional
 
 from app.core.db import get_async_session
-from app.models import User, UserQuestionProgress, Question
+from app.crud import progress_crud
+from app.core.user import fastapi_users
+from app.schemas.progress import UserProgressList
 
 router = APIRouter()
-
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
-@router.get("/me/passed", response_model=list[int])
-async def get_passed_question_ids(
-    session: SessionDep,
-    user: User = Depends(fastapi_users.current_user(active=True)),
-):
-    """Список ID пройденных вопросов текущего пользователя."""
-    result = await session.execute(
-        select(UserQuestionProgress.question_id).where(
-            UserQuestionProgress.user_id == user.id
-        )
-    )
-    return list(result.scalars().all())
-
-
-@router.post("/me/passed/{question_id}", status_code=204)
-async def mark_question_passed(
-    session: SessionDep,
+@router.post("/{question_id}/passed")
+async def mark_as_passed(
     question_id: int,
-    user: User = Depends(fastapi_users.current_user(active=True)),
+    session: SessionDep,
+    current_user=Depends(fastapi_users.current_user(active=True)),
 ):
     """Отметить вопрос как пройденный."""
-    question = await session.get(Question, question_id)
-    if not question:
-        raise HTTPException(status_code=404, detail="Question not found")
-
-    existing = await session.get(
-        UserQuestionProgress,
-        {"user_id": user.id, "question_id": question_id},
-    )
-    if existing:
-        return
-
-    progress = UserQuestionProgress(user_id=user.id, question_id=question_id)
-    session.add(progress)
-    await session.commit()
+    await progress_crud.mark_as_passed(session, current_user.id, question_id)
+    return {"status": "ok"}
 
 
-@router.delete("/me/passed/{question_id}", status_code=204)
-async def unmark_question_passed(
-    session: SessionDep,
+@router.delete("/{question_id}/passed")
+async def unmark_as_passed(
     question_id: int,
-    user: User = Depends(fastapi_users.current_user(active=True)),
+    session: SessionDep,
+    current_user=Depends(fastapi_users.current_user(active=True)),
 ):
-    """Снять отметку с вопроса."""
-    await session.execute(
-        delete(UserQuestionProgress).where(
-            UserQuestionProgress.user_id == user.id,
-            UserQuestionProgress.question_id == question_id,
-        )
+    """Снять отметку пройденного."""
+    deleted = await progress_crud.unmark_as_passed(
+        session, current_user.id, question_id
     )
-    await session.commit()
+    if not deleted:
+        raise HTTPException(404, "Отметка не найдена")
+    return {"status": "ok"}
+
+
+@router.get("/passed", response_model=UserProgressList)
+async def get_passed_questions(
+    session: SessionDep,
+    current_user=Depends(fastapi_users.current_user(active=True)),
+    question_ids: Optional[List[int]] = Query(None),
+):
+    """Список ID пройденных вопросов."""
+    return await progress_crud.get_user_progress(
+        session,
+        current_user.id,
+        question_ids,
+    )

@@ -4,6 +4,7 @@ declare const classNames: {
   readonly backButton: "backButton";
   readonly comment: "comment";
   readonly tournament: "tournament";
+  readonly button: "button";
   readonly question: "question";
 };
 export default classNames;

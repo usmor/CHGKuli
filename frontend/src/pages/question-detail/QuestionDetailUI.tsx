@@ -2,11 +2,13 @@ import {
   Accordion,
   Anchor,
   Badge,
+  Box,
   Button,
   CheckIcon,
   Group,
   Stack,
   Text,
+  Tooltip,
 } from '@mantine/core';
 import { CustomAlert, CustomLoader } from '@shared/ui';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +20,7 @@ import classes from './QuestionDetail.module.css';
 type QuestionDetailUIProps = {
   question: Question;
   isPassed: boolean;
+  isAuthorized: boolean;
   onTogglePassed: () => void;
 };
 
@@ -26,6 +29,7 @@ export const QuestionDetailUI = {
     question,
     isPassed,
     onTogglePassed,
+    isAuthorized,
   }: QuestionDetailUIProps): React.JSX.Element => {
     const authors = question.authors.map((a) => a.name).join(', ');
     const tournament = question.tournament;
@@ -106,15 +110,28 @@ export const QuestionDetailUI = {
               </Text>
             )}
           </Stack>
-          <Button
-            onClick={onTogglePassed}
-            variant="filled"
-            color={isPassed ? 'var(--purple-haze)' : 'var(--soft-blue)'}
-            fz={16}
-            leftSection={isPassed ? <CheckIcon size={16} /> : null}
+          <Tooltip
+            label="Авторизуйтесь, чтобы сохранять прогресс"
+            multiline
+            disabled={isAuthorized}
+            withArrow
+            position="top"
           >
-            {isPassed ? 'Снять отметку' : 'Пометить вопрос как пройденный'}
-          </Button>
+            <Box w="100%">
+              <Button
+                w="100%"
+                className={classes.button}
+                disabled={!isAuthorized}
+                onClick={onTogglePassed}
+                variant="filled"
+                color={isPassed ? 'var(--purple-haze)' : 'var(--soft-blue)'}
+                fz={16}
+                leftSection={isPassed ? <CheckIcon size={16} /> : null}
+              >
+                {isPassed ? 'Снять отметку' : 'Пометить вопрос как пройденный'}
+              </Button>
+            </Box>
+          </Tooltip>
         </Stack>
       </div>
     );

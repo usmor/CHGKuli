@@ -19,16 +19,16 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
+    <QueryClientProvider client={queryClient}>
       <ErrorBoundary fallback={<ServerError />}>
         <MantineProvider defaultColorScheme="auto" theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
+          <BrowserRouter>
+            <AuthProvider>
               <App />
-            </BrowserRouter>
-          </QueryClientProvider>
+            </AuthProvider>
+          </BrowserRouter>
         </MantineProvider>
       </ErrorBoundary>
-    </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>
 );

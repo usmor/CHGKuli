@@ -1,52 +1,60 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
-const STORAGE_KEY = 'chgkuli:question-progress';
+import { fetcher } from '@/shared/lib/api/fetcher';
 
-type Progress = Record<number, boolean>;
+import { useAuth } from './useAuth';
 
-const readProgress = (): Progress => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-
-    const parsed: unknown = JSON.parse(raw);
-
-    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-      return {};
-    }
-
-    return parsed as Progress;
-  } catch {
-    return {};
-  }
+type PassedQuestionsResponse = {
+  question_ids: number[];
+  total: number;
 };
 
 type UseQuestionProgressResult = {
   isPassed: boolean;
-  toggle: () => void;
+  togglePassed: () => void;
+  isLoading: boolean;
 };
 
 export const useQuestionProgress = (questionId: number): UseQuestionProgressResult => {
-  const [isPassed, setIsPassed] = useState(false);
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    const progress = readProgress();
-    setIsPassed(Boolean(progress[questionId]));
-  }, [questionId]);
+  const { data } = useQuery<PassedQuestionsResponse>({
+    queryKey: ['progress', 'passed'],
+    queryFn: (): Promise<PassedQuestionsResponse> =>
+      fetcher<PassedQuestionsResponse>('/progress/passed'),
+    enabled: Boolean(user),
+  });
 
-  const toggle = useCallback((): void => {
-    const progress = readProgress();
-    const next = !progress[questionId];
+  const passedIds = data?.question_ids ?? [];
+  const isPassed = passedIds.includes(questionId);
+  const markMutation = useMutation({
+    mutationFn: () => fetcher(`/progress/${questionId}/passed`, { method: 'POST' }),
+    onSuccess: (): void => {
+      void queryClient.invalidateQueries({ queryKey: ['progress'] });
+    },
+  });
 
-    if (next) {
-      progress[questionId] = true;
+  const unmarkMutation = useMutation({
+    mutationFn: (): Promise<void> =>
+      fetcher(`/progress/${questionId}/passed`, { method: 'DELETE' }),
+    onSuccess: (): void => {
+      void queryClient.invalidateQueries({ queryKey: ['progress'] });
+    },
+  });
+
+  const togglePassed = useCallback((): void => {
+    if (isPassed) {
+      unmarkMutation.mutate();
     } else {
-      delete progress[questionId];
+      markMutation.mutate();
     }
+  }, [isPassed, markMutation, unmarkMutation]);
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-    setIsPassed(next);
-  }, [questionId]);
-
-  return { isPassed, toggle };
+  return {
+    isPassed,
+    togglePassed,
+    isLoading: markMutation.isPending || unmarkMutation.isPending,
+  };
 };

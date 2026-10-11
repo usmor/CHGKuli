@@ -1,5 +1,6 @@
 const API_URL =
   (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:8000/api/v1';
+const TOKEN_KEY = 'token';
 
 export class ApiError extends Error {
   public status: number;
@@ -16,10 +17,14 @@ export class ApiError extends Error {
 }
 
 export const fetcher = async <T>(path: string, options?: RequestInit): Promise<T> => {
+  const token = localStorage.getItem(TOKEN_KEY);
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      ...(options?.body instanceof FormData
+        ? {}
+        : { 'Content-Type': 'application/json' }),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
   });

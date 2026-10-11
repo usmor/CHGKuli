@@ -1,4 +1,4 @@
-import { useQuestion, useQuestionProgress } from '@shared/lib/hooks';
+import { useAuth, useQuestion, useQuestionProgress } from '@shared/lib/hooks';
 import { useParams } from 'react-router-dom';
 
 import { QuestionDetailUI } from './QuestionDetailUI';
@@ -7,8 +7,10 @@ export const QuestionDetail = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const questionId = Number(id);
 
-  const { data, isLoading, error } = useQuestion(questionId);
-  const { isPassed, toggle } = useQuestionProgress(questionId);
+  const { data: question, isLoading, error } = useQuestion(questionId);
+
+  const { isPassed, togglePassed } = useQuestionProgress(questionId);
+  const { user } = useAuth();
 
   if (isLoading) {
     return <QuestionDetailUI.Loading />;
@@ -20,9 +22,10 @@ export const QuestionDetail = (): React.JSX.Element => {
 
   return (
     <QuestionDetailUI.Question
-      question={data!}
+      question={question!}
       isPassed={isPassed}
-      onTogglePassed={toggle}
+      onTogglePassed={togglePassed}
+      isAuthorized={Boolean(user)}
     />
   );
 };
