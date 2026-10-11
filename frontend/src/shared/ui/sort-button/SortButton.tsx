@@ -13,6 +13,7 @@ const SORT_OPTIONS: SortOption[] = [
   { value: 'year_asc', label: 'Старые сначала' },
   { value: 'author', label: 'По автору' },
   { value: 'tournament', label: 'По турниру' },
+  { value: 'random', label: 'Случайный порядок' },
 ];
 
 type SortButtonProps = {
@@ -22,7 +23,7 @@ type SortButtonProps = {
 
 export const SortButton = ({ value, onChange }: SortButtonProps): React.JSX.Element => {
   const currentLabel =
-    SORT_OPTIONS.find((o) => o.value === value)?.label ?? 'По порядку';
+    SORT_OPTIONS.find((o) => o.value === value)?.label ?? 'Случайный порядок';
 
   return (
     <Menu position="bottom-end" shadow="md" width={220} trigger="hover">

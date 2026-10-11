@@ -10,7 +10,7 @@ export const ProgressBadge = ({
   if (!isPassed) return null;
 
   return (
-    <Badge color="var(--crocus-purple)" variant="filled">
+    <Badge color="var(--crocus-purple)" variant="filled" radius="md">
       ✓
     </Badge>
   );

@@ -41,7 +41,7 @@ export const QuestionCardUI = ({
           {tournamentName}
         </Text>
         {badge}
-        <Badge color="var(--easter-purple)" className={classes.badge}>
+        <Badge color="var(--easter-purple)" className={classes.badge} radius="md">
           {tournamentYear}
         </Badge>
       </Group>
