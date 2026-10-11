@@ -1,4 +1,13 @@
-import { Accordion, Anchor, Badge, Group, Stack, Text } from '@mantine/core';
+import {
+  Accordion,
+  Anchor,
+  Badge,
+  Button,
+  CheckIcon,
+  Group,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { CustomAlert, CustomLoader } from '@shared/ui';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,10 +17,16 @@ import classes from './QuestionDetail.module.css';
 
 type QuestionDetailUIProps = {
   question: Question;
+  isPassed: boolean;
+  onTogglePassed: () => void;
 };
 
 export const QuestionDetailUI = {
-  Question: ({ question }: QuestionDetailUIProps): React.JSX.Element => {
+  Question: ({
+    question,
+    isPassed,
+    onTogglePassed,
+  }: QuestionDetailUIProps): React.JSX.Element => {
     const authors = question.authors.map((a) => a.name).join(', ');
     const tournament = question.tournament;
     const navigate = useNavigate();
@@ -34,9 +49,21 @@ export const QuestionDetailUI = {
                 {tournament?.name}
               </Text>
             )}
+            {isPassed && (
+              <Badge
+                color="var(--crocus-purple)"
+                variant="filled"
+                fz={12}
+                radius="md"
+                size="lg"
+                leftSection={<CheckIcon size={12} />}
+              >
+                Вопрос пройден
+              </Badge>
+            )}
 
             {tournament?.year && (
-              <Badge color="var(--easter-purple)" size="lg">
+              <Badge color="var(--easter-purple)" size="lg" radius="md">
                 {tournament?.year}
               </Badge>
             )}
@@ -79,6 +106,15 @@ export const QuestionDetailUI = {
               </Text>
             )}
           </Stack>
+          <Button
+            onClick={onTogglePassed}
+            variant="filled"
+            color={isPassed ? 'var(--purple-haze)' : 'var(--soft-blue)'}
+            fz={16}
+            leftSection={isPassed ? <CheckIcon size={16} /> : null}
+          >
+            {isPassed ? 'Снять отметку' : 'Пометить вопрос как пройденный'}
+          </Button>
         </Stack>
       </div>
     );

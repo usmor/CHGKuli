@@ -5,3 +5,4 @@ export { useQuestions } from './useQuestions';
 export { useInfiniteScroll } from './useInfiniteScroll';
 export { useAutoComplete } from './useAutoComplete';
 export { useByIds } from './useByIds';
+export { useQuestionProgress } from './useQuestionProgress';
