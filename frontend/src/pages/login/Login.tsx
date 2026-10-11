@@ -2,8 +2,8 @@ import { useForm } from '@mantine/form';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useAuth } from '@/shared/lib/hooks';
 import { ApiError } from '@/shared/lib/api/fetcher';
+import { useAuth } from '@/shared/lib/hooks';
 
 import { LoginUI, type LoginFormValues } from './LoginUI';
 
@@ -16,8 +16,7 @@ export const Login = (): React.JSX.Element => {
   const location = useLocation();
 
   const from =
-    (location.state as { from?: { pathname: string } })?.from?.pathname ??
-    '/profile';
+    (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/profile';
 
   const form = useForm<LoginFormValues>({
     initialValues: {
@@ -44,7 +43,8 @@ export const Login = (): React.JSX.Element => {
 
     try {
       await login(values.email, values.password);
-      void navigate('/profile', { replace: true });
+
+      void navigate(from, { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 400 || err.status === 401) {

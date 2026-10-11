@@ -6,9 +6,6 @@ import { AuthContext } from './AuthContext';
 import type { User } from '@/shared/types/user';
 
 const TOKEN_KEY = 'token';
-const API_URL =
-  (import.meta.env.VITE_API_URL as string | undefined) ??
-  'http://localhost:8000/api/v1';
 
 export const AuthProvider = ({
   children,
@@ -44,23 +41,22 @@ export const AuthProvider = ({
   }, [loadUser]);
 
   const login = useCallback(
-  async (email: string, password: string): Promise<void> => {
-    const formData = new URLSearchParams();
-    formData.append('username', email);
-    formData.append('password', password);
+    async (email: string, password: string): Promise<void> => {
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
 
-    const data = await fetcher<{ access_token: string }>('/auth/jwt/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString(),
-    });
+      const data = await fetcher<{ access_token: string }>('/auth/jwt/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString(),
+      });
 
-    localStorage.setItem(TOKEN_KEY, data.access_token);
-    await loadUser();
-  },
-  [loadUser],
-);
-
+      localStorage.setItem(TOKEN_KEY, data.access_token);
+      await loadUser();
+    },
+    [loadUser]
+  );
 
   const register = useCallback(
     async (email: string, username: string, password: string): Promise<void> => {
@@ -70,7 +66,7 @@ export const AuthProvider = ({
       });
       await login(email, password);
     },
-    [login],
+    [login]
   );
 
   const logout = useCallback((): void => {

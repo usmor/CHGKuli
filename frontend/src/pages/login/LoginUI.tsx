@@ -8,13 +8,13 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { type UseFormReturnType } from '@mantine/form';
 import { Link } from 'react-router-dom';
 
 import { CustomAlert } from '@/shared/ui';
 
-import classes from './Login.module.css';
+import type { UseFormReturnType } from '@mantine/form';
 
+import classes from './Login.module.css';
 
 export type LoginFormValues = {
   email: string;

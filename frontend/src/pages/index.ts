@@ -5,3 +5,4 @@ export { About } from './about';
 export { QuestionDetail } from './question-detail';
 export { AllQuestions } from './all-questions';
 export { Login } from './login';
+export { Register } from './register';
