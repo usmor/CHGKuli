@@ -38,7 +38,7 @@ async def get_tournaments(
 ):
     """Получить все турниры"""
     tournaments = await tournament_crud.get_multi(session)
-    return tournaments[skip: skip + limit]
+    return tournaments[skip : skip + limit]
 
 
 @router.get("/{tournament_id}", response_model=Tournament)

@@ -54,8 +54,7 @@ class QuestionMode(str, Enum):
 
 class QuestionSetRequest(BaseModel):
     count: int = Field(10, ge=1, le=100, description="Количество вопросов")
-    mode: QuestionMode = Field(
-        QuestionMode.QUIZ, description="Режим отображения")
+    mode: QuestionMode = Field(QuestionMode.QUIZ, description="Режим отображения")
     author_id: int | None = Field(None, description="ID автора")
     tournament_id: int | None = Field(None, description="ID турнира")
     year_from: int | None = Field(None, ge=1800, le=2100, description="Год от")

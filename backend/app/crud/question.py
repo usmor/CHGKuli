@@ -7,10 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.crud.base import CRUDBase
-from app.models import (Question,
-                        Tournament,
-                        question_author_association,
-                        Author)
+from app.models import Question, Tournament, question_author_association, Author
 
 
 class CRUDQuestion(CRUDBase):
@@ -59,8 +56,7 @@ class CRUDQuestion(CRUDBase):
         offset = random.randint(0, max(0, total - count))
 
         if relations:
-            options = [selectinload(getattr(Question, rel))
-                       for rel in relations]
+            options = [selectinload(getattr(Question, rel)) for rel in relations]
             query = query.options(*options)
 
         query = query.offset(offset).limit(count)
@@ -90,8 +86,7 @@ class CRUDQuestion(CRUDBase):
 
         query = select(Question).where(Question.id.in_(selected_ids))
         if relations:
-            options = [selectinload(getattr(Question, rel))
-                       for rel in relations]
+            options = [selectinload(getattr(Question, rel)) for rel in relations]
             query = query.options(*options)
 
         result = await session.execute(query)
@@ -153,18 +148,15 @@ class CRUDQuestion(CRUDBase):
                 asc(Question.id),
             )
         elif sort == "author":
-            query = query.join(Question.authors).order_by(
-                asc(Author.name)).distinct()
+            query = query.join(Question.authors).order_by(asc(Author.name)).distinct()
         elif sort == "tournament":
-            query = query.join(Question.tournament).order_by(
-                asc(Tournament.name))
+            query = query.join(Question.tournament).order_by(asc(Tournament.name))
         else:
             hash_expr = (Question.id * 2654435761) % 4294967296
             query = query.order_by(hash_expr)
 
         if relations:
-            options = [selectinload(getattr(Question, rel))
-                       for rel in relations]
+            options = [selectinload(getattr(Question, rel)) for rel in relations]
             query = query.options(*options)
 
         query = query.offset(skip).limit(limit)
