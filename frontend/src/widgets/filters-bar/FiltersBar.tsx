@@ -5,19 +5,17 @@ import { FiltersBarUI } from './FiltersBarUI';
 
 import type { Author, Tournament } from '@/shared/types';
 
-type FiltersSidebarProps = {
+type FiltersBarProps = {
   filters: QuestionFilters;
   onApply: (filters: QuestionFilters) => void;
   onReset: () => void;
-  onAuthorsChange: (authors: Author[]) => void;
-  onTournamentsChange: (tournaments: Tournament[]) => void;
 };
 
 export const FiltersBar = ({
   filters,
   onApply,
   onReset,
-}: FiltersSidebarProps): React.JSX.Element => {
+}: FiltersBarProps): React.JSX.Element => {
   const [authors, setAuthors] = useState<Author[]>([]);
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
 

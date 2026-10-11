@@ -1,6 +1,6 @@
 import { AutoComplete } from '@features/autocomplete';
 import { Button, Divider, NumberInput, Stack, Text, Title } from '@mantine/core';
-import { FunnelIcon, XIcon } from '@phosphor-icons/react';
+import { FunnelIcon } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 
 import type { QuestionFilters } from '@shared/lib/hooks';
@@ -29,12 +29,10 @@ export const FiltersBarUI = ({
 }: FiltersBarUIProps): React.JSX.Element => {
   const [yearFrom, setYearFrom] = useState<number | null>(filters.year_from);
   const [yearTo, setYearTo] = useState<number | null>(filters.year_to);
-  const [limit, setLimit] = useState(filters.limit);
 
   useEffect(() => {
     setYearFrom(filters.year_from);
     setYearTo(filters.year_to);
-    setLimit(filters.limit);
   }, [filters]);
 
   const handleApply = (): void => {
@@ -43,14 +41,13 @@ export const FiltersBarUI = ({
       tournament_ids: tournaments.map((t) => t.id),
       year_from: yearFrom,
       year_to: yearTo,
-      limit,
+      sort: filters.sort,
     });
   };
 
   const handleReset = (): void => {
     setYearFrom(null);
     setYearTo(null);
-    setLimit(20);
     onAuthorsChange([]);
     onTournamentsChange([]);
     onReset();
@@ -68,22 +65,9 @@ export const FiltersBarUI = ({
     <aside className={classes.sidebar}>
       <Stack gap="lg">
         <Title order={4} className={classes.header}>
-          <FunnelIcon size={20} weight="bold" />
+          <FunnelIcon size={30} weight="bold" />
           Фильтры
         </Title>
-
-        <Divider />
-
-        <Stack gap="xs">
-          <Text fw={600}>Количество на странице</Text>
-          <NumberInput
-            value={limit}
-            onChange={(value) => setLimit(Number(value) || 20)}
-            min={10}
-            max={100}
-            step={10}
-          />
-        </Stack>
 
         <Divider />
 
@@ -132,16 +116,10 @@ export const FiltersBarUI = ({
         <Divider />
 
         <Stack gap="sm">
-          <Button onClick={handleApply} color="var(--crocus-purple)" fullWidth>
+          <Button onClick={handleApply} color="var(--crocus-purple)" fullWidth fz={16}>
             Применить
           </Button>
-          <Button
-            onClick={handleReset}
-            variant="light"
-            color="gray"
-            leftSection={<XIcon size={16} />}
-            fullWidth
-          >
+          <Button onClick={handleReset} variant="light" color="gray" fullWidth fz={16}>
             Сбросить
           </Button>
         </Stack>

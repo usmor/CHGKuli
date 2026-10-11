@@ -1,6 +1,4 @@
 .sidebar {
-  position: sticky;
-  top: 24px;
   flex-shrink: 0;
   width: 320px;
   padding: 24px;
