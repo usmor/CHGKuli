@@ -1,10 +1,11 @@
 import { Button, Container, Group, Image, Menu, Title } from '@mantine/core';
+import { SignOutIcon, UserIcon } from '@phosphor-icons/react';
 import { clsx } from 'clsx';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+
+import type { User } from '@shared/types/user';
 
 import classes from './Header.module.css';
-import type { User } from '@shared/types/user';
-import { SignOutIcon, UserIcon } from '@phosphor-icons/react';
 
 type NavItem = {
   label: string;
@@ -29,6 +30,7 @@ export const HeaderUI = ({
   navItems = defaultNavItems,
 }: HeaderUIProps): React.JSX.Element => {
   const items = user ? navItems : [...navItems, { label: 'Войти', to: '/login' }];
+  const location = useLocation();
   return (
     <header className={classes.header}>
       <Container size="lg" className={classes.inner}>
@@ -42,8 +44,10 @@ export const HeaderUI = ({
         <Group gap="lg" component="nav">
           {items.map((item) => (
             <NavLink
+              state={item.to === '/login' ? { from: location } : undefined}
               key={item.to}
               to={item.to}
+              end
               className={({ isActive }) =>
                 clsx(classes.link, { [classes.linkActive]: isActive })
               }
