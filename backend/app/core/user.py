@@ -1,13 +1,12 @@
 # mypy: disable-error-code="type-var,override,attr-defined"
 from typing import Optional
 
-from fastapi import Depends, Request
+from fastapi import Depends, HTTPException, Request, status
 from fastapi_users import (
     BaseUserManager,
     FastAPIUsers,
     IntegerIDMixin,
     InvalidPasswordException,
-    exceptions,
 )
 from fastapi_users.authentication import (
     AuthenticationBackend,
@@ -66,7 +65,20 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
             select(User).where(User.username == user_create.username)
         )
         if result.scalar_one_or_none():
-            raise exceptions.UserAlreadyExists()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="USERNAME_ALREADY_EXISTS",
+            )
+
+        result = await self.user_db.session.execute(
+            select(User).where(User.email == user_create.email)
+        )
+
+        if result.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="EMAIL_ALREADY_EXISTS",
+            )
 
         return await super().create(user_create, safe=safe, request=request)
 

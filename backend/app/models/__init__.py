@@ -3,3 +3,4 @@ from app.models.author import Author  # noqa
 from app.models.question import Question  # noqa
 from app.models.question_author import question_author_association  # noqa
 from app.models.user import User  # noqa
+from app.models.user_question_progress import UserQuestionProgress  # noqa
