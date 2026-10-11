@@ -1,14 +1,16 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { parseNumber } from '../utils';
+import { parseNumber, parseSort } from '../utils';
+
+export type QuestionSort = 'random' | 'year_desc' | 'year_asc' | 'author' | 'tournament';
 
 export type QuestionFilters = {
   author_ids: number[];
   tournament_ids: number[];
   year_from: number | null;
   year_to: number | null;
-  limit: number;
+  sort: QuestionSort;
 };
 
 const DEFAULT_FILTERS: QuestionFilters = {
@@ -16,7 +18,7 @@ const DEFAULT_FILTERS: QuestionFilters = {
   tournament_ids: [],
   year_from: null,
   year_to: null,
-  limit: 20,
+  sort: 'random',
 };
 
 type UseQuestionFiltersResult = {
@@ -34,7 +36,7 @@ export const useQuestionFilters = (): UseQuestionFiltersResult => {
       tournament_ids: searchParams.getAll('tournament_ids').map(Number).filter(Boolean),
       year_from: parseNumber(searchParams.get('year_from')),
       year_to: parseNumber(searchParams.get('year_to')),
-      limit: parseNumber(searchParams.get('limit')) ?? DEFAULT_FILTERS.limit,
+      sort: parseSort(searchParams.get('sort')),
     }),
     [searchParams]
   );
@@ -49,8 +51,8 @@ export const useQuestionFilters = (): UseQuestionFiltersResult => {
 
       if (newFilters.year_from) params.set('year_from', String(newFilters.year_from));
       if (newFilters.year_to) params.set('year_to', String(newFilters.year_to));
-      if (newFilters.limit !== DEFAULT_FILTERS.limit) {
-        params.set('limit', String(newFilters.limit));
+      if (newFilters.sort !== DEFAULT_FILTERS.sort) {
+        params.set('sort', newFilters.sort);
       }
 
       setSearchParams(params);

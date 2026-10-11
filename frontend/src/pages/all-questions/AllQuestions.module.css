@@ -1,10 +1,16 @@
-.content {
+.layout {
   display: flex;
-  flex-direction: column;
-  gap: 30px;
-  width: 90%;
+  align-items: flex-start;
+  gap: 32px;
 }
 
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 30px;
+  min-width: 820px;
+}
 
 .sentinel {
   width: 100%;

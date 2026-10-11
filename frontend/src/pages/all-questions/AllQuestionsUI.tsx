@@ -1,12 +1,9 @@
 import { QuestionCard } from '@entities/index';
-import {
-  Container,
-  Title,
-  Text,
-  SimpleGrid,
-} from '@mantine/core';
-import { CustomAlert, CustomLoader, ScrollToTop } from '@shared/ui';
+import { Container, Title, Text, SimpleGrid, Group } from '@mantine/core';
+import { CustomAlert, CustomLoader, ScrollToTop, SortButton } from '@shared/ui';
+import { FiltersBar } from '@widgets/index';
 
+import type { QuestionFilters } from '@shared/lib/hooks';
 import type { Question } from '@shared/types';
 import type { RefObject } from 'react';
 
@@ -20,6 +17,9 @@ type AllQuestionsUIProps = {
   hasNextPage: boolean;
   error: Error | null;
   sentinelRef: RefObject<HTMLDivElement | null>;
+  filters: QuestionFilters;
+  onFiltersChange: (filters: QuestionFilters) => void;
+  onFiltersReset: () => void;
 };
 
 export const AllQuestionsUI = ({
@@ -30,45 +30,68 @@ export const AllQuestionsUI = ({
   hasNextPage,
   error,
   sentinelRef,
+  filters,
+  onFiltersChange,
+  onFiltersReset,
 }: AllQuestionsUIProps): React.JSX.Element => {
   return (
     <>
-      <Container size="xl" py="xl" className={classes.content}>
-        <Title order={1}>Все, что есть</Title>
-        {isLoading && <CustomLoader />}
-
-        {error && (
-          <CustomAlert
-            title="Не удалось загрузить вопросы"
-            message="Попробуйте обновить страницу позже."
+      <Container size="xl" py="xl">
+        <div className={classes.layout}>
+          <FiltersBar
+            filters={filters}
+            onApply={onFiltersChange}
+            onReset={onFiltersReset}
           />
-        )}
 
-        {!isLoading && !error && (
-          <>
-            {questions.length === 0 ? (
-              <Text c="dimmed" ta="center" py="xl">
-                Пока ничего нет
-              </Text>
-            ) : (
-              <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>
-                {questions.map((q) => (
-                  <QuestionCard key={q.id} question={q} />
-                ))}
-              </SimpleGrid>
+          <div className={classes.content}>
+            <Title order={1}>Все, что есть</Title>
+            {isLoading && <CustomLoader />}
+
+            {error && (
+              <CustomAlert
+                title="Не удалось загрузить вопросы"
+                message="Попробуйте обновить страницу позже."
+              />
             )}
 
-            <div ref={sentinelRef} className={classes.sentinel} />
+            {!isLoading && !error && (
+              <>
+                {questions.length === 0 ? (
+                  <CustomAlert
+                    title="Пока ничего нет"
+                    message="Попробуйте другой запрос"
+                  />
+                ) : (
+                  <>
+                    <Group justify="space-between" align="flex-end" wrap="wrap">
+                      <Text>Всего загружено вопросов – {total} </Text>
+                      <SortButton
+                        value={filters.sort}
+                        onChange={(sort) => onFiltersChange({ ...filters, sort })}
+                      />
+                    </Group>
+                    <SimpleGrid cols={2}>
+                      {questions.map((q) => (
+                        <QuestionCard key={q.id} question={q} />
+                      ))}
+                    </SimpleGrid>
+                  </>
+                )}
 
-            {isFetchingNextPage && <CustomLoader />}
+                <div ref={sentinelRef} className={classes.sentinel} />
 
-            {!hasNextPage && questions.length > 0 && (
-              <Text c="dimmed" ta="center" py="xl">
-                Это все вопросы. Дальше ничего нет.
-              </Text>
+                {isFetchingNextPage && <CustomLoader />}
+
+                {!hasNextPage && questions.length > 0 && (
+                  <Text c="dimmed" ta="center" py="xl">
+                    Это все вопросы. Дальше ничего нет.
+                  </Text>
+                )}
+              </>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </Container>
       <ScrollToTop />
     </>

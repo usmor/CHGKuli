@@ -1,12 +1,16 @@
 import random
 from datetime import date
+from typing import List, Optional
 
-from sqlalchemy import func, select
+from sqlalchemy import exists, func, select, asc, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.crud.base import CRUDBase
-from app.models import Question, Tournament, question_author_association
+from app.models import (Question,
+                        Tournament,
+                        question_author_association,
+                        Author)
 
 
 class CRUDQuestion(CRUDBase):
@@ -55,7 +59,8 @@ class CRUDQuestion(CRUDBase):
         offset = random.randint(0, max(0, total - count))
 
         if relations:
-            options = [selectinload(getattr(Question, rel)) for rel in relations]
+            options = [selectinload(getattr(Question, rel))
+                       for rel in relations]
             query = query.options(*options)
 
         query = query.offset(offset).limit(count)
@@ -85,7 +90,8 @@ class CRUDQuestion(CRUDBase):
 
         query = select(Question).where(Question.id.in_(selected_ids))
         if relations:
-            options = [selectinload(getattr(Question, rel)) for rel in relations]
+            options = [selectinload(getattr(Question, rel))
+                       for rel in relations]
             query = query.options(*options)
 
         result = await session.execute(query)
@@ -97,22 +103,69 @@ class CRUDQuestion(CRUDBase):
         skip: int = 0,
         limit: int = 20,
         relations: list[str] | None = None,
+        author_ids: Optional[List[int]] = None,
+        tournament_ids: Optional[List[int]] = None,
+        year_from: Optional[int] = None,
+        year_to: Optional[int] = None,
+        sort: str = "id",
     ):
         query = select(Question)
 
-        # Псевдо-случайный порядок — стабильный для каждого id
-        hash_expr = (Question.id * 2654435761) % 4294967296
+        if author_ids:
+            query = query.where(
+                exists()
+                .where(
+                    question_author_association.c.question_id == Question.id,
+                )
+                .where(
+                    question_author_association.c.author_id.in_(author_ids),
+                ),
+            )
 
-        query = query.order_by(hash_expr)
+        if tournament_ids:
+            query = query.where(Question.tournament_id.in_(tournament_ids))
 
-        if relations:
-            options = [selectinload(getattr(Question, rel)) for rel in relations]
-            query = query.options(*options)
+        if year_from or year_to:
+            query = query.join(Question.tournament)
+            if year_from:
+                query = query.where(Tournament.year >= year_from)
+            if year_to:
+                query = query.where(Tournament.year <= year_to)
 
         count_result = await session.execute(
-            select(func.count()).select_from(query.subquery())
+            select(func.count()).select_from(query.subquery()),
         )
-        total = count_result.scalar()
+
+        total = count_result.scalar() or 0
+
+        if total == 0:
+            return [], 0
+
+        # Сортировка
+        if sort == "year_desc":
+            query = query.join(Question.tournament).order_by(
+                desc(Tournament.year),
+                desc(Question.id),
+            )
+        elif sort == "year_asc":
+            query = query.join(Question.tournament).order_by(
+                asc(Tournament.year),
+                asc(Question.id),
+            )
+        elif sort == "author":
+            query = query.join(Question.authors).order_by(
+                asc(Author.name)).distinct()
+        elif sort == "tournament":
+            query = query.join(Question.tournament).order_by(
+                asc(Tournament.name))
+        else:
+            hash_expr = (Question.id * 2654435761) % 4294967296
+            query = query.order_by(hash_expr)
+
+        if relations:
+            options = [selectinload(getattr(Question, rel))
+                       for rel in relations]
+            query = query.options(*options)
 
         query = query.offset(skip).limit(limit)
         result = await session.execute(query)

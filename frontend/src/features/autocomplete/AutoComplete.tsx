@@ -5,30 +5,29 @@ import { AutoCompleteUI } from './AutoCompleteUI';
 
 import type { AutoCompleteType, SearchItem } from '@shared/types';
 
-type AutoCompleteProps = {
+type AutoCompleteProps<T extends SearchItem> = {
   type: AutoCompleteType;
-  value: SearchItem[];
-  onChange: (items: SearchItem[]) => void;
+  value: T[];
+  onChange: (items: T[]) => void;
   placeholder?: string;
 };
 
-export const AutoComplete = ({
+export const AutoComplete = <T extends SearchItem>({
   type,
   value,
   onChange,
   placeholder,
-}: AutoCompleteProps): React.JSX.Element => {
+}: AutoCompleteProps<T>): React.JSX.Element => {
   const [query, setQuery] = useState('');
   const { data: suggestions = [] } = useAutoComplete(type, query);
-
 
   const allItems = [...value, ...suggestions];
 
   const uniqueItems = Array.from(
-    new Map(allItems.map((item) => [item.id, item])).values(),
-  );
+    new Map(allItems.map((item) => [item.id, item])).values()
+  ) as T[];
 
-  const data = suggestions.map((item) => ({
+  const data = uniqueItems.map((item) => ({
     value: String(item.id),
     label: item.name,
   }));
@@ -38,8 +37,7 @@ export const AutoComplete = ({
   const handleChange = (ids: string[]): void => {
     const items = ids
       .map((id) => uniqueItems.find((s) => String(s.id) === id))
-      .filter((item): item is SearchItem => Boolean(item));
-
+      .filter((item): item is T => Boolean(item));
     onChange(items);
   };
 

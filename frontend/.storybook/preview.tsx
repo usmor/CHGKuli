@@ -19,7 +19,6 @@ const queryClient = new QueryClient({
   },
 });
 
-
 const withProviders: Decorator = (Story) => (
   <QueryClientProvider client={queryClient}>
     <MantineProvider defaultColorScheme="light" theme={theme}>
@@ -29,7 +28,6 @@ const withProviders: Decorator = (Story) => (
     </MantineProvider>
   </QueryClientProvider>
 );
-
 
 const preview: Preview = {
   parameters: {

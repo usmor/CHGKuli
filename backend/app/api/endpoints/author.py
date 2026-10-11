@@ -14,7 +14,7 @@ SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 @router.get("/autocomplete", response_model=List[Author])
 async def autocomplete_authors(
     session: SessionDep,
-    q: Optional[str] = Query(None, min_length=2),
+    q: Optional[str] = Query(None),
     ids: Optional[List[int]] = Query(None),
     limit: int = Query(10, ge=1, le=20),
 ):
