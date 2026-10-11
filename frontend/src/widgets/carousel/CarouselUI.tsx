@@ -10,7 +10,6 @@ type CarouselUIProps = {
 };
 
 export const CarouselUI = ({ items }: CarouselUIProps): React.JSX.Element => {
-  console.log(classes);
   const autoplay = useRef(Autoplay({ delay: 2000 }));
   return (
     <Container size="lg" className={classes.container}>
