@@ -26,7 +26,7 @@ export const SortButton = ({ value, onChange }: SortButtonProps): React.JSX.Elem
     SORT_OPTIONS.find((o) => o.value === value)?.label ?? 'Случайный порядок';
 
   return (
-    <Menu position="bottom-end" shadow="md" width={220} trigger="hover">
+    <Menu position="bottom-end" shadow="md" width={220}>
       <Menu.Target>
         <Button
           fz={16}
