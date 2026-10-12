@@ -1,3 +1,4 @@
+import { ProtectedRoute } from '@features/index';
 import { Header, Footer } from '@widgets/index';
 import { Route, Routes } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ import {
   Home,
   Login,
   NotFound,
+  Profile,
   QuestionDetail,
   Register,
 } from '@/pages';
@@ -27,6 +29,9 @@ const App = (): React.JSX.Element => {
           <Route path="/questions/:id" element={<QuestionDetail />} />
           <Route path="/game" element={<div>Игроровой режим</div>} />
           <Route path="*" element={<NotFound />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Routes>
       </main>
       <Footer />
