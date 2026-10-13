@@ -19,6 +19,7 @@ async def mark_as_passed(
 ):
     """Отметить вопрос как пройденный."""
     await progress_crud.mark_as_passed(session, current_user.id, question_id)
+    await session.commit()
     return {"status": "ok"}
 
 
@@ -34,6 +35,7 @@ async def unmark_as_passed(
     )
     if not deleted:
         raise HTTPException(404, "Отметка не найдена")
+    await session.commit()
     return {"status": "ok"}
 
 

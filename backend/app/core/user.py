@@ -82,13 +82,6 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
         return await super().create(user_create, safe=safe, request=request)
 
-    async def on_after_register(
-        self,
-        user: User,
-        request: Optional[Request] = None,
-    ) -> None:
-        print(f"Пользователь {user.email} зарегистрирован.")
-
 
 async def get_user_manager(user_db=Depends(get_user_db)):
     yield UserManager(user_db)

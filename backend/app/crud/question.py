@@ -2,7 +2,7 @@ import random
 from datetime import date
 from typing import List, Optional
 
-from sqlalchemy import exists, func, select, asc, desc
+from sqlalchemy import BigInteger, cast, exists, func, select, asc, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -15,27 +15,28 @@ class CRUDQuestion(CRUDBase):
         self,
         session: AsyncSession,
         count: int = 10,
-        author_id: int | None = None,
-        tournament_id: int | None = None,
-        year_from: int | None = None,
-        year_to: int | None = None,
-        relations: list[str] | None = None,
-    ) -> list[Question]:
+        author_ids: Optional[List[int]] = None,
+        tournament_ids: Optional[List[int]] = None,
+        year_from: Optional[int] = None,
+        year_to: Optional[int] = None,
+        relations: Optional[List[str]] = None,
+        exclude_question_ids: Optional[List[int]] = None,
+    ) -> List[Question]:
         """
         Получить случайный набор вопросов с фильтрами.
         """
         query = select(Question)
 
-        # Фильтр по автору (через связующую таблицу)
-        if author_id:
+        # Фильтр по авторам (через связующую таблицу)
+        if author_ids:
             query = query.join(
                 question_author_association,
                 question_author_association.c.question_id == Question.id,
-            ).where(question_author_association.c.author_id == author_id)
+            ).where(question_author_association.c.author_id.in_(author_ids))
 
-        # Фильтр по турниру
-        if tournament_id:
-            query = query.where(Question.tournament_id == tournament_id)
+        # Фильтр по турнирам
+        if tournament_ids:
+            query = query.where(Question.tournament_id.in_(tournament_ids))
 
         # Фильтр по году (через турнир)
         if year_from or year_to:
@@ -45,10 +46,15 @@ class CRUDQuestion(CRUDBase):
             if year_to:
                 query = query.where(Tournament.year <= year_to)
 
+        if exclude_question_ids:
+            query = query.where(Question.id.notin_(exclude_question_ids))
+
+        query = query.distinct()
+
         count_result = await session.execute(
             select(func.count()).select_from(query.subquery())
         )
-        total = count_result.scalar()
+        total = count_result.scalar() or 0
 
         if total == 0:
             return []
@@ -152,7 +158,7 @@ class CRUDQuestion(CRUDBase):
         elif sort == "tournament":
             query = query.join(Question.tournament).order_by(asc(Tournament.name))
         else:
-            hash_expr = (Question.id * 2654435761) % 4294967296
+            hash_expr = (cast(Question.id, BigInteger) * 2654435761) % 4294967296
             query = query.order_by(hash_expr)
 
         if relations:

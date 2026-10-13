@@ -26,9 +26,48 @@ class CRUDProgress:
             question_id=question_id,
         )
         session.add(progress)
-        await session.commit()
-        await session.refresh(progress)
+        await session.flush()
         return progress
+
+    async def mark_many_as_passed(
+        self,
+        session: AsyncSession,
+        user_ids: list[int],
+        question_ids: list[int],
+    ) -> int:
+        """
+        Пометить все пары (user_id, question_id) как пройденные.
+        Возвращает количество вставленных строк.
+        """
+        if not user_ids or not question_ids:
+            return 0
+
+        user_ids = list(set(user_ids))
+        question_ids = list(set(question_ids))
+
+        existing_result = await session.execute(
+            select(
+                UserQuestionProgress.user_id,
+                UserQuestionProgress.question_id,
+            ).where(
+                UserQuestionProgress.user_id.in_(user_ids),
+                UserQuestionProgress.question_id.in_(question_ids),
+            )
+        )
+        existing = {(r.user_id, r.question_id) for r in existing_result}
+
+        new_rows = [
+            UserQuestionProgress(user_id=uid, question_id=qid)
+            for uid in user_ids
+            for qid in question_ids
+            if (uid, qid) not in existing
+        ]
+        if not new_rows:
+            return 0
+
+        session.add_all(new_rows)
+        await session.flush()
+        return len(new_rows)
 
     async def unmark_as_passed(
         self,
@@ -42,7 +81,7 @@ class CRUDProgress:
                 UserQuestionProgress.question_id == question_id,
             )
         )
-        await session.commit()
+        await session.flush()
         return result.rowcount > 0
 
     async def get_user_progress(
@@ -60,8 +99,23 @@ class CRUDProgress:
             )
         result = await session.execute(query)
         question_ids = list(result.scalars().all())
-        return UserProgressList(question_ids=question_ids,
-                                total=len(question_ids))
+        return UserProgressList(question_ids=question_ids, total=len(question_ids))
+
+    async def get_passed_question_ids_for_users(
+        self,
+        session: AsyncSession,
+        user_ids: list[int],
+    ) -> set[int]:
+        """ID вопросов, которые проходил хотя бы один из указанных пользователей."""
+        if not user_ids:
+            return set()
+
+        result = await session.execute(
+            select(UserQuestionProgress.question_id).where(
+                UserQuestionProgress.user_id.in_(user_ids)
+            )
+        )
+        return set(result.scalars().all())
 
 
 progress_crud = CRUDProgress()

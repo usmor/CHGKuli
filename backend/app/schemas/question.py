@@ -30,7 +30,7 @@ class Question(QuestionBase):
     tournament: Tournament | None = None
     authors: list[Author] = []
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def author_ids(self) -> list[int]:
         """Получить список ID авторов из authors"""
@@ -47,16 +47,10 @@ class QuestionListResponse(BaseModel):
     has_more: bool
 
 
-class QuestionMode(str, Enum):
-    QUIZ = "quiz"
-    LIST = "list"
-
-
 class QuestionSetRequest(BaseModel):
     count: int = Field(10, ge=1, le=100, description="Количество вопросов")
-    mode: QuestionMode = Field(QuestionMode.QUIZ, description="Режим отображения")
-    author_id: int | None = Field(None, description="ID автора")
-    tournament_id: int | None = Field(None, description="ID турнира")
+    author_ids: list[int] = Field(default_factory=list, description="ID авторов")
+    tournament_ids: list[int] = Field(default_factory=list, description="ID турниров")
     year_from: int | None = Field(None, ge=1800, le=2100, description="Год от")
     year_to: int | None = Field(None, ge=1800, le=2100, description="Год до")
 

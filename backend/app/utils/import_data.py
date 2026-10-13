@@ -5,7 +5,7 @@ from collections import Counter
 from typing import Any
 
 from sqlalchemy import select
-from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from tqdm import tqdm
 
@@ -98,7 +98,8 @@ async def import_tournaments(db: AsyncSession, tournaments_data: list[dict]) -> 
 
                 if not existing:
                     year = parse_year(year_str)
-                    tournament = Tournament(id=item.get("id"), name=name, year=year)
+                    tournament = Tournament(
+                        id=item.get("id"), name=name, year=year)
                     db.add(tournament)
                     count += 1
             pbar.update(1)
@@ -207,10 +208,12 @@ async def import_questions(
 
             # Добавляем связи с авторами
             for author_id in unique_author_ids:
-                stmt = sqlite_insert(question_author_association).values(
+                stmt = pg_insert(question_author_association).values(
                     question_id=question.id, author_id=author_id
                 )
-                stmt = stmt.prefix_with("OR IGNORE")
+                stmt = stmt.on_conflict_do_nothing(
+                    index_elements=["question_id", "author_id"]
+                )
                 await db.execute(stmt)
 
             count += 1

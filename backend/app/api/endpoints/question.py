@@ -58,15 +58,18 @@ async def get_daily_set(session: SessionDep, count: int = Query(10, ge=1, le=50)
 
 
 @router.post("/set", response_model=list[Question])
-async def get_question_set(request: QuestionSetRequest, session: SessionDep):
+async def get_question_set(
+    request: QuestionSetRequest,
+    session: SessionDep,
+):
     """
     Получить случайный набор вопросов с фильтрами.
     """
     questions = await question_crud.get_random_set(
         session,
         count=request.count,
-        author_id=request.author_id,
-        tournament_id=request.tournament_id,
+        author_ids=request.author_ids or None,
+        tournament_ids=request.tournament_ids or None,
         year_from=request.year_from,
         year_to=request.year_to,
         relations=["tournament", "authors"],
