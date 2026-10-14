@@ -38,7 +38,7 @@ export const fetcher = async <T>(path: string, options?: RequestInit): Promise<T
         if (typeof d === 'string') detail = d;
       }
     } catch {
-       // nothing to do
+      // nothing to do
     }
     throw new ApiError(response.status, response.statusText, detail);
   }
