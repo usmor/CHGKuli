@@ -9,7 +9,7 @@ import type { RefObject } from 'react';
 
 import classes from './ProfileQuestionsTab.module.css';
 
-type Props = {
+type ProfileQuestionsTabUIProps = {
   questions: Question[];
   total: number;
   isLoading: boolean;
@@ -33,7 +33,7 @@ export const ProfileQuestionsTabUI = ({
   filters,
   onFiltersChange,
   onFiltersReset,
-}: Props): React.JSX.Element => {
+}: ProfileQuestionsTabUIProps): React.JSX.Element => {
   return (
     <>
       <div className={classes.layout}>

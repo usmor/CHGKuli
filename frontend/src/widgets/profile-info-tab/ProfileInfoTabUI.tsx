@@ -23,7 +23,7 @@ type PasswordPayload = {
   password: string;
 };
 
-type Props = {
+type ProfileInfoTabUIProps = {
   user: User;
   isUpdating: boolean;
   isChangingPassword: boolean;
@@ -37,7 +37,7 @@ export const ProfileInfoTabUI = ({
   isChangingPassword,
   onInfoSubmit,
   onPasswordSubmit,
-}: Props): React.JSX.Element => {
+}: ProfileInfoTabUIProps): React.JSX.Element => {
   const infoForm = useForm({
     initialValues: {
       username: user.username,

@@ -7,9 +7,9 @@ import { ProfileInfoTabUI } from './ProfileInfoTabUI';
 
 import type { User } from '@shared/types/user';
 
-type Props = { user: User };
+type ProfileInfoTabProps = { user: User };
 
-export const ProfileInfoTab = ({ user }: Props): React.JSX.Element => {
+export const ProfileInfoTab = ({ user }: ProfileInfoTabProps): React.JSX.Element => {
   const update = useUpdateMe();
   const changePassword = useChangePassword();
 
