@@ -1,5 +1,5 @@
 import { QuestionCard } from '@entities/index';
-import { Group, SimpleGrid, Text, Title } from '@mantine/core';
+import { Group, SimpleGrid, Text } from '@mantine/core';
 import { CustomAlert, CustomLoader, ScrollToTop, SortButton } from '@shared/ui';
 import { FiltersBar } from '@widgets/index';
 
@@ -44,8 +44,6 @@ export const ProfileQuestionsTabUI = ({
         />
 
         <div className={classes.content}>
-          <Title order={3}>Пройденные вопросы</Title>
-
           {isLoading && <CustomLoader />}
 
           {error && (
@@ -65,7 +63,9 @@ export const ProfileQuestionsTabUI = ({
               ) : (
                 <>
                   <Group justify="space-between" align="flex-end" wrap="wrap">
-                    <Text>Всего пройдено – {total}</Text>
+                    <Text fw="600" fz="18">
+                      Всего пройдено – {total}
+                    </Text>
                     <SortButton
                       value={filters.sort}
                       onChange={(sort) => onFiltersChange({ ...filters, sort })}

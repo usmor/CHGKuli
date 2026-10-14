@@ -93,6 +93,7 @@ class GameShort(BaseModel):
     answered_count: int
     started_at: Optional[datetime]
     finished_at: Optional[datetime]
+    is_hidden: bool = False 
 
     @computed_field  # type: ignore[prop-decorator]
     @property

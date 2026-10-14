@@ -2,13 +2,14 @@ from datetime import date, datetime, timezone
 from typing import List, Optional, Tuple
 
 from fastapi import HTTPException
-from sqlalchemy import exists, or_, select, func, delete
+from sqlalchemy import and_, exists, or_, select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.crud.base import CRUDBase
 from app.models import Game, GamePlayer, GameQuestion, User
 from app.models.game import GameStatus
+from app.models.game_hidden import GameHidden
 
 
 class CRUDGame(CRUDBase):
@@ -55,16 +56,25 @@ class CRUDGame(CRUDBase):
         user_id: int,
         limit: int = 20,
         offset: int = 0,
+        include_hidden: bool = False,
     ) -> Tuple[List[Game], int]:
         participant_exists = exists().where(
             GamePlayer.game_id == Game.id,
             GamePlayer.user_id == user_id,
         )
 
-        where_clause = or_(
-            Game.owner_id == user_id,
-            participant_exists,
-        )
+        conditions = [
+            or_(Game.owner_id == user_id, participant_exists),
+        ]
+
+        if not include_hidden:
+            hidden_exists = exists().where(
+                GameHidden.user_id == user_id,
+                GameHidden.game_id == Game.id,
+            )
+            conditions.append(~hidden_exists)
+
+        where_clause = and_(*conditions)
 
         count_result = await session.execute(
             select(func.count())
@@ -240,6 +250,54 @@ class CRUDGame(CRUDBase):
 
         await session.flush()
         return game
+
+    async def hide_game(
+        self,
+        session: AsyncSession,
+        user_id: int,
+        game_id: int,
+    ) -> bool:
+        """Скрыть игру у конкретного пользователя."""
+        # Проверить, не скрыта ли уже
+        existing = (
+            await session.execute(
+                select(GameHidden).where(
+                    GameHidden.user_id == user_id,
+                    GameHidden.game_id == game_id,
+                )
+            )
+        ).scalar_one_or_none()
+        if existing:
+            return False
+
+        session.add(GameHidden(user_id=user_id, game_id=game_id))
+        await session.flush()
+        return True
+
+    async def unhide_game(
+        self,
+        session: AsyncSession,
+        user_id: int,
+        game_id: int,
+    ) -> bool:
+        """Вернуть игру в список."""
+        result = await session.execute(
+            delete(GameHidden).where(
+                GameHidden.user_id == user_id,
+                GameHidden.game_id == game_id,
+            )
+        )
+        return result.rowcount > 0
+
+    async def get_hidden_game_ids(
+        self,
+        session: AsyncSession,
+        user_id: int,
+    ) -> set[int]:
+        result = await session.execute(
+            select(GameHidden.game_id).where(GameHidden.user_id == user_id)
+        )
+        return set(result.scalars().all())
 
 
 game_crud = CRUDGame(Game)

@@ -14,3 +14,5 @@ export { useMyStats } from './useMyStats';
 export { usePassedQuestions, type PassedQuestionsPage } from './usePassedQuestions';
 export { useGame } from './useGame';
 export { useMyGames } from './useMyGames';
+export { useHideGame } from './useHideGame';
+export { useUnhideGame } from './useUnhideGame';

@@ -5,6 +5,7 @@ from app.models.question import Question
 from app.models.question_author import question_author_association
 from app.models.user_question_progress import UserQuestionProgress
 from app.models.game import Game, GamePlayer, GameQuestion
+from app.models.game_hidden import GameHidden
 
 __all__ = [
     "Author",
@@ -16,4 +17,5 @@ __all__ = [
     "Game",
     "GamePlayer",
     "GameQuestion",
+    "GameHidden"
 ]

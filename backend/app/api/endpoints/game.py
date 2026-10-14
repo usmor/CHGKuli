@@ -92,13 +92,25 @@ async def update_game_settings(
 async def get_my_games(
     limit: int = 20,
     offset: int = 0,
+    include_hidden: bool = False,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(fastapi_users.current_user(active=True)),
 ):
     games, _ = await game_crud.get_user_games(
-        session, user_id=user.id, limit=limit, offset=offset
+        session,
+        user_id=user.id,
+        limit=limit,
+        offset=offset,
+        include_hidden=include_hidden,
     )
-    return games
+    hidden_ids = await game_crud.get_hidden_game_ids(session, user.id)
+
+    result = []
+    for game in games:
+        data = GameShort.model_validate(game)
+        data.is_hidden = game.id in hidden_ids
+        result.append(data)
+    return result
 
 
 @router.get("/{game_id}", response_model=GameSchema)
@@ -243,9 +255,7 @@ async def finish_game(
     question_ids = [gq.question_id for gq in game.questions]
 
     if user_ids and question_ids:
-        await progress_crud.mark_many_as_passed(
-            session, list(user_ids), question_ids
-        )
+        await progress_crud.mark_many_as_passed(session, list(user_ids), question_ids)
 
     await session.commit()
     game = await game_crud.get_with_relations_or_404(game.id, session)
@@ -271,10 +281,32 @@ async def claim_game(
     if game.status == GameStatus.FINISHED.value:
         question_ids = [gq.question_id for gq in game.questions]
         if question_ids:
-            await progress_crud.mark_many_as_passed(
-                session, [user.id], question_ids
-            )
+            await progress_crud.mark_many_as_passed(session, [user.id], question_ids)
 
     await session.commit()
     game = await game_crud.get_with_relations_or_404(game.id, session)
     return GameSchema.from_orm_game(game)
+
+
+@router.post("/{game_id}/hide", status_code=204)
+async def hide_game(
+    game: Game = Depends(get_game_for_user),
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(fastapi_users.current_user(active=True)),
+):
+    """Убрать игру из своего списка."""
+    await game_crud.hide_game(session, user.id, game.id)
+    await session.commit()
+    return
+
+
+@router.delete("/{game_id}/hide", status_code=204)
+async def unhide_game(
+    game: Game = Depends(get_game_for_user),
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(fastapi_users.current_user(active=True)),
+):
+    """Вернуть игру в список."""
+    await game_crud.unhide_game(session, user.id, game.id)
+    await session.commit()
+    return

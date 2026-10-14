@@ -1,24 +1,24 @@
-import { Accordion, Badge, Group, Stack, Text, Title } from '@mantine/core';
-import { CalendarBlankIcon } from '@phosphor-icons/react';
-import { formatDateTime, gameStatusColor, gameStatusLabel } from '@shared/lib/utils';
+import { Accordion, Stack, Switch } from '@mantine/core';
 
-import { GameDetails } from '@/entities';
+import { GameAccordionItem } from '@/entities/game-accordion-item';
 import { CustomAlert, CustomLoader } from '@/shared/ui';
 
 import type { GameShort } from '@shared/types/game';
-
-// import classes from './ProfileGamesTab.module.css';
 
 type ProfileGamesTabUIProps = {
   games: GameShort[];
   isLoading: boolean;
   isError: boolean;
+  showHidden: boolean;
+  onShowHiddenChange: (value: boolean) => void;
 };
 
 export const ProfileGamesTabUI = ({
   games,
   isLoading,
   isError,
+  showHidden,
+  onShowHiddenChange,
 }: ProfileGamesTabUIProps): React.JSX.Element => {
   if (isLoading) {
     return (
@@ -46,64 +46,40 @@ export const ProfileGamesTabUI = ({
     );
   }
 
+  const visible = games.filter((g) => !g.is_hidden);
+  const hidden = games.filter((g) => g.is_hidden);
+  const list = showHidden ? [...visible, ...hidden] : visible;
+
   return (
     <Stack gap="lg" w="100%">
-      <Title order={3}>История игр</Title>
-
-      <Accordion
-        variant="separated"
+      <Switch
         radius="md"
-        chevronPosition="right"
-        chevronIconSize={20}
-      >
-        {games.map((game) => {
-          const total = game.questions_count || 0;
-          const answered = game.answered_count || 0;
-
-          return (
-            <Accordion.Item key={game.id} value={String(game.id)}>
-              <Accordion.Control>
-                <Group justify="space-between" wrap="nowrap" gap="md">
-                  <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
-                    <Text fw={600} fz={20} truncate>
-                      {game.title ?? `Игра #${game.id}`}
-                    </Text>
-                    <Group gap="xs" c="dimmed" fz={13}>
-                      <CalendarBlankIcon size={16} />
-                      <Text fz={16} c="dimmed">
-                        {formatDateTime(game.started_at ?? game.finished_at)}
-                      </Text>
-                    </Group>
-                  </Stack>
-
-                  <Group gap="xs" wrap="nowrap" mr={10}>
-                    <Badge
-                      variant="light"
-                      color="var(--purple-haze)"
-                      size="lg"
-                      styles={{ label: { fontSize: 16 } }}
-                      radius="md"
-                    >
-                      {answered} / {total}
-                    </Badge>
-                    <Badge
-                      color={gameStatusColor(game.status)}
-                      size="lg"
-                      radius="md"
-                      styles={{ label: { fontSize: 16 } }}
-                    >
-                      {gameStatusLabel(game.status)}
-                    </Badge>
-                  </Group>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <GameDetails gameId={game.id} />
-              </Accordion.Panel>
-            </Accordion.Item>
-          );
-        })}
-      </Accordion>
+        checked={showHidden}
+        onChange={(e) => onShowHiddenChange(e.currentTarget.checked)}
+        label={`Показывать скрытые${hidden.length > 0 ? ` (${hidden.length})` : ''}`}
+        styles={{
+          label: {
+            fontSize: 18,
+            fontWeight: 500,
+          },
+          track: {
+            backgroundColor: 'var(--purple-haze)',
+            borderColor: 'var(--purple-haze)',
+          },
+        }}
+      />
+      {list.length > 0 && (
+        <Accordion
+          variant="separated"
+          radius="md"
+          chevronPosition="right"
+          chevronIconSize={20}
+        >
+          {list.map((game) => (
+            <GameAccordionItem key={game.id} game={game} />
+          ))}
+        </Accordion>
+      )}
     </Stack>
   );
 };

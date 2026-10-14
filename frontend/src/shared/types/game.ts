@@ -51,6 +51,7 @@ export type GameShort = {
   finished_at: string | null;
   is_finished: boolean;
   players: GamePlayerShort[];
+  is_hidden: boolean;
 };
 
 export type GameWithToken = {

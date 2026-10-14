@@ -1,0 +1,1 @@
+export { GameAccordionItem } from './GameAccordionItem';
