@@ -33,6 +33,7 @@ export const useQuestionProgress = (questionId: number): UseQuestionProgressResu
     mutationFn: () => fetcher(`/progress/${questionId}/passed`, { method: 'POST' }),
     onSuccess: (): void => {
       void queryClient.invalidateQueries({ queryKey: ['progress'] });
+      void queryClient.invalidateQueries({ queryKey: ['my-stats'] });
     },
   });
 
@@ -41,6 +42,7 @@ export const useQuestionProgress = (questionId: number): UseQuestionProgressResu
       fetcher(`/progress/${questionId}/passed`, { method: 'DELETE' }),
     onSuccess: (): void => {
       void queryClient.invalidateQueries({ queryKey: ['progress'] });
+      void queryClient.invalidateQueries({ queryKey: ['my-stats'] });
     },
   });
 
