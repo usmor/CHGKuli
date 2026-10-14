@@ -7,3 +7,6 @@ export { useAutoComplete } from './useAutoComplete';
 export { useByIds } from './useByIds';
 export { useQuestionProgress } from './useQuestionProgress';
 export { useAuth } from './useAuth';
+export { useDailyCode, type DailyCodeResponse } from './useDailyCode';
+export { useUpdateMe } from './useUpdateMe';
+export { useChangePassword } from './useChangePassword';
