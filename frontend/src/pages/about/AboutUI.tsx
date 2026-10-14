@@ -5,12 +5,20 @@ import {
   SlidersHorizontalIcon,
   PersonSimpleIcon,
 } from '@phosphor-icons/react';
+import { useSearchParams } from 'react-router-dom';
 
 import { Link } from '@/shared/ui';
 
 import classes from './About.module.css';
 
 export const AboutUI = (): React.JSX.Element => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') ?? 'about';
+
+  const handleTabChange = (value: string | null): void => {
+    if (!value) return;
+    setSearchParams({ tab: value });
+  };
   return (
     <Tabs
       defaultValue="about"
@@ -20,6 +28,8 @@ export const AboutUI = (): React.JSX.Element => {
         tab: classes.tab,
         tabLabel: classes.tabLabel,
       }}
+      value={activeTab}
+      onChange={handleTabChange}
     >
       <Tabs.List className={classes.tabsList}>
         <Tabs.Tab
