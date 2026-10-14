@@ -2,7 +2,7 @@ from datetime import date, datetime, timezone
 from typing import List, Optional, Tuple
 
 from fastapi import HTTPException
-from sqlalchemy import select, func, delete
+from sqlalchemy import exists, or_, select, func, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -56,21 +56,28 @@ class CRUDGame(CRUDBase):
         limit: int = 20,
         offset: int = 0,
     ) -> Tuple[List[Game], int]:
+        participant_exists = exists().where(
+            GamePlayer.game_id == Game.id,
+            GamePlayer.user_id == user_id,
+        )
+
+        where_clause = or_(
+            Game.owner_id == user_id,
+            participant_exists,
+        )
+
         count_result = await session.execute(
-            select(func.count(func.distinct(Game.id)))
+            select(func.count())
             .select_from(Game)
-            .outerjoin(GamePlayer, GamePlayer.game_id == Game.id)
-            .where((Game.owner_id == user_id) | (GamePlayer.user_id == user_id))
+            .where(where_clause)
         )
         total = count_result.scalar() or 0
 
         result = await session.execute(
             select(Game)
-            .outerjoin(GamePlayer, GamePlayer.game_id == Game.id)
-            .where((Game.owner_id == user_id) | (GamePlayer.user_id == user_id))
+            .where(where_clause)
             .options(selectinload(Game.players).selectinload(GamePlayer.user))
             .order_by(Game.created_at.desc())
-            .distinct()
             .offset(offset)
             .limit(limit)
         )

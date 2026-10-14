@@ -6,11 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import (
     Game,
     GamePlayer,
-    GameQuestion,
     User,
     UserQuestionProgress,
 )
 from app.schemas.user import UserStats
+from app.models.game import GameStatus
 
 
 class CRUDUserStats:
@@ -37,23 +37,31 @@ class CRUDUserStats:
                 or_(
                     Game.owner_id == user.id,
                     GamePlayer.user_id == user.id,
-                )
+                ),
+                Game.status == GameStatus.FINISHED.value,
             )
         )
         games_played = games_result.scalar() or 0
 
-        # Общее время по GameQuestion в играх юзера
         time_result = await session.execute(
             select(
-                func.coalesce(func.sum(GameQuestion.time_spent_seconds), 0)
+                func.coalesce(
+                    func.sum(
+                        func.extract('epoch', Game.finished_at - Game.started_at)
+                    ),
+                    0,
+                )
             )
-            .join(Game, Game.id == GameQuestion.game_id)
+            .select_from(Game)
             .outerjoin(GamePlayer, GamePlayer.game_id == Game.id)
             .where(
                 or_(
                     Game.owner_id == user.id,
                     GamePlayer.user_id == user.id,
-                )
+                ),
+                Game.status == GameStatus.FINISHED.value,
+                Game.started_at.isnot(None),
+                Game.finished_at.isnot(None),
             )
         )
         total_time_seconds = int(time_result.scalar() or 0)

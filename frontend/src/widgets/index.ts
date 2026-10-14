@@ -6,3 +6,4 @@ export { FiltersBar } from './filters-bar';
 export { ProfileInfoTab } from './profile-info-tab';
 export { ProfileStatsTab } from './profile-stats-tab';
 export { ProfileQuestionsTab } from './profile-questions-tab';
+export { ProfileGamesTab } from './profile-games-tab';

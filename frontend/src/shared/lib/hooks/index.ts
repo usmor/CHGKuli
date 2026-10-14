@@ -12,3 +12,5 @@ export { useUpdateMe } from './useUpdateMe';
 export { useChangePassword } from './useChangePassword';
 export { useMyStats } from './useMyStats';
 export { usePassedQuestions, type PassedQuestionsPage } from './usePassedQuestions';
+export { useGame } from './useGame';
+export { useMyGames } from './useMyGames';
