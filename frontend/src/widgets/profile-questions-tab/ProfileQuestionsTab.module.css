@@ -1,0 +1,17 @@
+.layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.sentinel {
+  width: 100%;
+  height: 1px;
+}

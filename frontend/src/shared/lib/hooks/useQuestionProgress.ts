@@ -5,7 +5,7 @@ import { fetcher } from '@/shared/lib/api/fetcher';
 
 import { useAuth } from './useAuth';
 
-type PassedQuestionsResponse = {
+export type PassedQuestionsResponse = {
   question_ids: number[];
   total: number;
 };

@@ -117,5 +117,18 @@ class CRUDProgress:
         )
         return set(result.scalars().all())
 
+    async def get_all_passed_ids(
+        self,
+        session: AsyncSession,
+        user_id: int,
+    ) -> list[int]:
+        """Все id вопросов, пройденных пользователем."""
+        result = await session.execute(
+            select(UserQuestionProgress.question_id).where(
+                UserQuestionProgress.user_id == user_id,
+            )
+        )
+        return list(result.scalars().all())
+
 
 progress_crud = CRUDProgress()

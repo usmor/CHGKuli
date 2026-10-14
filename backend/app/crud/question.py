@@ -109,8 +109,11 @@ class CRUDQuestion(CRUDBase):
         year_from: Optional[int] = None,
         year_to: Optional[int] = None,
         sort: str = "id",
+        question_ids: Optional[List[int]] = None,
     ):
         query = select(Question)
+        if question_ids is not None:
+            query = query.where(Question.id.in_(question_ids))
 
         if author_ids:
             query = query.where(
@@ -154,7 +157,20 @@ class CRUDQuestion(CRUDBase):
                 asc(Question.id),
             )
         elif sort == "author":
-            query = query.join(Question.authors).order_by(asc(Author.name)).distinct()
+            author_name_subq = (
+                select(Author.name)
+                .join(
+                    question_author_association,
+                    question_author_association.c.author_id == Author.id,
+                )
+                .where(
+                    question_author_association.c.question_id == Question.id,
+                )
+                .order_by(Author.name)
+                .limit(1)
+                .scalar_subquery()
+            )
+            query = query.order_by(author_name_subq)
         elif sort == "tournament":
             query = query.join(Question.tournament).order_by(asc(Tournament.name))
         else:

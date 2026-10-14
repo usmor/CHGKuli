@@ -43,19 +43,34 @@ export const useQuestionFilters = (): UseQuestionFiltersResult => {
 
   const setFilters = useCallback(
     (newFilters: QuestionFilters) => {
-      const params = new URLSearchParams();
-      newFilters.author_ids.forEach((id) => params.append('author_ids', String(id)));
-      newFilters.tournament_ids.forEach((id) =>
-        params.append('tournament_ids', String(id))
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+
+          params.delete('author_ids');
+          params.delete('tournament_ids');
+          params.delete('year_from');
+          params.delete('year_to');
+          params.delete('sort');
+
+          newFilters.author_ids.forEach((id) => params.append('author_ids', String(id)));
+          newFilters.tournament_ids.forEach((id) =>
+            params.append('tournament_ids', String(id))
+          );
+          if (newFilters.year_from) {
+            params.set('year_from', String(newFilters.year_from));
+          }
+          if (newFilters.year_to) {
+            params.set('year_to', String(newFilters.year_to));
+          }
+          if (newFilters.sort !== DEFAULT_FILTERS.sort) {
+            params.set('sort', newFilters.sort);
+          }
+
+          return params;
+        },
+        { replace: true }
       );
-
-      if (newFilters.year_from) params.set('year_from', String(newFilters.year_from));
-      if (newFilters.year_to) params.set('year_to', String(newFilters.year_to));
-      if (newFilters.sort !== DEFAULT_FILTERS.sort) {
-        params.set('sort', newFilters.sort);
-      }
-
-      setSearchParams(params);
     },
     [setSearchParams]
   );
