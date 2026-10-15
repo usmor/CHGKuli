@@ -19,3 +19,4 @@ export { useUnhideGame } from './useUnhideGame';
 export { useCreateGame } from './useCreateGame';
 export { useGameActions } from './useGameActions';
 export { useUpdateGame } from './useUpdateGame';
+export { useClaimGame } from './useClaimGame';
