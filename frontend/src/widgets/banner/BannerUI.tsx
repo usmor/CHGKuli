@@ -1,11 +1,17 @@
 import { Button, Group, Stack, Text, Title } from '@mantine/core';
+import { formatStat } from '@shared/lib/utils/';
+import { Stat } from '@shared/ui';
 import { Link } from 'react-router-dom';
 
-import { Stat } from '@/shared/ui';
+import type { SiteStats } from '@/shared/lib/hooks';
 
 import classes from './Banner.module.css';
 
-export const BannerUI = (): React.JSX.Element => {
+type BannerUIProps = {
+  stats: SiteStats;
+};
+
+export const BannerUI = ({ stats }: BannerUIProps): React.JSX.Element => {
   return (
     <section className={classes.banner}>
       <Stack className={classes.content}>
@@ -20,9 +26,15 @@ export const BannerUI = (): React.JSX.Element => {
           <br />А еда, молитва и любовь подождут до конца турнира.
         </Text>
         <Group gap="xl" className={classes.stats}>
-          <Stat value="334 000+" label="вопросов" />
-          <Stat value="10 900+" label="авторов" />
-          <Stat value="5 500+" label="турниров" />
+          <Stat
+            value={stats ? formatStat(stats.questions, 1000) : '—'}
+            label="вопросов"
+          />
+          <Stat value={stats ? formatStat(stats.authors, 100) : '—'} label="авторов" />
+          <Stat
+            value={stats ? formatStat(stats.tournaments, 100) : '—'}
+            label="турниров"
+          />
         </Group>
         <Group gap="md" mt="md">
           <Button

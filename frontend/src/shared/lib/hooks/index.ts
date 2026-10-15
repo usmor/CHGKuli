@@ -24,3 +24,4 @@ export { useGamePlayState, type GamePlayState } from './useGamePlayState';
 export { useGameTimer } from './useGameTimer';
 export { useTimerSound } from './useTimerSound';
 export { useAvailableQuestions } from './useAvailableQuestions';
+export { useSiteStats, type SiteStats } from './useSiteStats';

@@ -7,6 +7,7 @@ from app.api.endpoints import (
     user_router,
     progress_router,
     game_router,
+    stats_router,
 )
 
 main_router = APIRouter()
@@ -19,3 +20,4 @@ main_router.include_router(question_router, prefix="/questions", tags=["question
 main_router.include_router(user_router)
 main_router.include_router(progress_router, prefix="/progress", tags=["progress"])
 main_router.include_router(game_router, prefix="/game", tags=["game"])
+main_router.include_router(stats_router, prefix="/stats", tags=["stats"])
