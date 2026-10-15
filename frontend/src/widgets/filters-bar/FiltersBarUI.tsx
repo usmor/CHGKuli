@@ -1,6 +1,7 @@
 import { AutoComplete } from '@features/autocomplete';
 import { Button, Divider, NumberInput, Stack, Text, Title } from '@mantine/core';
 import { FunnelIcon } from '@phosphor-icons/react';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import type { QuestionFilters } from '@shared/lib/hooks';
@@ -17,6 +18,7 @@ type FiltersBarUIProps = {
   onApply: (filters: QuestionFilters) => void;
   onReset: () => void;
   autoApply?: boolean;
+  bare?: boolean;
 };
 
 export const FiltersBarUI = ({
@@ -28,6 +30,7 @@ export const FiltersBarUI = ({
   onApply,
   onReset,
   autoApply = false,
+  bare = false,
 }: FiltersBarUIProps): React.JSX.Element => {
   const [yearFrom, setYearFrom] = useState<number | null>(filters.year_from);
   const [yearTo, setYearTo] = useState<number | null>(filters.year_to);
@@ -72,7 +75,7 @@ export const FiltersBarUI = ({
   };
 
   return (
-    <aside className={classes.sidebar}>
+    <aside className={clsx(classes.sidebar, bare && classes.bare)}>
       <Stack gap="lg">
         <Title order={4} className={classes.header}>
           <FunnelIcon size={30} weight="bold" />

@@ -7,6 +7,14 @@
   border-radius: var(--mantine-radius-md);
 }
 
+.bare {
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
 .header {
   display: flex;
   align-items: center;

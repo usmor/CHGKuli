@@ -10,6 +10,7 @@ type FiltersBarProps = {
   onApply: (filters: QuestionFilters) => void;
   onReset: () => void;
   autoApply?: boolean;
+  bare?: boolean;
 };
 
 export const FiltersBar = ({
@@ -17,6 +18,7 @@ export const FiltersBar = ({
   onApply,
   onReset,
   autoApply = false,
+  bare = false,
 }: FiltersBarProps): React.JSX.Element => {
   const [authors, setAuthors] = useState<Author[]>([]);
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -42,6 +44,7 @@ export const FiltersBar = ({
       onApply={onApply}
       onReset={onReset}
       autoApply={autoApply}
+      bare={bare}
     />
   );
 };
