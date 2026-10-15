@@ -16,6 +16,7 @@ type FiltersBarUIProps = {
   onTournamentsChange: (tournaments: Tournament[]) => void;
   onApply: (filters: QuestionFilters) => void;
   onReset: () => void;
+  autoApply?: boolean;
 };
 
 export const FiltersBarUI = ({
@@ -26,6 +27,7 @@ export const FiltersBarUI = ({
   onTournamentsChange,
   onApply,
   onReset,
+  autoApply = false,
 }: FiltersBarUIProps): React.JSX.Element => {
   const [yearFrom, setYearFrom] = useState<number | null>(filters.year_from);
   const [yearTo, setYearTo] = useState<number | null>(filters.year_to);
@@ -35,14 +37,22 @@ export const FiltersBarUI = ({
     setYearTo(filters.year_to);
   }, [filters]);
 
+  const buildFilters = (): QuestionFilters => ({
+    author_ids: authors.map((a) => a.id),
+    tournament_ids: tournaments.map((t) => t.id),
+    year_from: yearFrom,
+    year_to: yearTo,
+    sort: filters.sort,
+  });
+
+  useEffect(() => {
+    if (autoApply) {
+      onApply(buildFilters());
+    }
+  }, [authors, tournaments, yearFrom, yearTo]);
+
   const handleApply = (): void => {
-    onApply({
-      author_ids: authors.map((a) => a.id),
-      tournament_ids: tournaments.map((t) => t.id),
-      year_from: yearFrom,
-      year_to: yearTo,
-      sort: filters.sort,
-    });
+    onApply(buildFilters());
   };
 
   const handleReset = (): void => {
@@ -116,9 +126,11 @@ export const FiltersBarUI = ({
         <Divider />
 
         <Stack gap="sm">
-          <Button onClick={handleApply} color="var(--crocus-purple)" fullWidth fz={16}>
-            Применить
-          </Button>
+          {!autoApply && (
+            <Button onClick={handleApply} color="var(--crocus-purple)" fullWidth fz={16}>
+              Применить
+            </Button>
+          )}
           <Button onClick={handleReset} variant="light" color="gray" fullWidth fz={16}>
             Сбросить
           </Button>
