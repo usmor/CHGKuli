@@ -8,5 +8,6 @@ export const useGame = (gameId: number | null): UseQueryResult<Game, Error> => {
     queryKey: ['game', gameId],
     queryFn: () => fetcher<Game>(`/game/${gameId}`),
     enabled: gameId !== null && Number.isFinite(gameId),
+    refetchOnWindowFocus: false,
   });
 };

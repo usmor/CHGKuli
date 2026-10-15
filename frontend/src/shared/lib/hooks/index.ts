@@ -16,3 +16,6 @@ export { useGame } from './useGame';
 export { useMyGames } from './useMyGames';
 export { useHideGame } from './useHideGame';
 export { useUnhideGame } from './useUnhideGame';
+export { useCreateGame } from './useCreateGame';
+export { useGameActions } from './useGameActions';
+export { useUpdateGame } from './useUpdateGame';
