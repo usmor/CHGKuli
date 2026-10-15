@@ -21,6 +21,14 @@ const DEFAULT_FILTERS: QuestionFilters = {
   sort: 'random',
 };
 
+const FILTER_KEYS = [
+  'author_ids',
+  'tournament_ids',
+  'year_from',
+  'year_to',
+  'sort',
+] as const;
+
 type UseQuestionFiltersResult = {
   filters: QuestionFilters;
   setFilters: (filters: QuestionFilters) => void;
@@ -42,16 +50,12 @@ export const useQuestionFilters = (): UseQuestionFiltersResult => {
   );
 
   const setFilters = useCallback(
-    (newFilters: QuestionFilters) => {
+    (newFilters: QuestionFilters): void => {
       setSearchParams(
         (prev) => {
           const params = new URLSearchParams(prev);
 
-          params.delete('author_ids');
-          params.delete('tournament_ids');
-          params.delete('year_from');
-          params.delete('year_to');
-          params.delete('sort');
+          FILTER_KEYS.forEach((key) => params.delete(key));
 
           newFilters.author_ids.forEach((id) => params.append('author_ids', String(id)));
           newFilters.tournament_ids.forEach((id) =>
@@ -75,8 +79,15 @@ export const useQuestionFilters = (): UseQuestionFiltersResult => {
     [setSearchParams]
   );
 
-  const resetFilters = useCallback(() => {
-    setSearchParams(new URLSearchParams());
+  const resetFilters = useCallback((): void => {
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        FILTER_KEYS.forEach((key) => params.delete(key));
+        return params;
+      },
+      { replace: true }
+    );
   }, [setSearchParams]);
 
   return { filters, setFilters, resetFilters };
