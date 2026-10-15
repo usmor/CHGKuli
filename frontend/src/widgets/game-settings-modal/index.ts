@@ -1,0 +1,1 @@
+export { GameSettingsModal } from './GameSettingsModal';

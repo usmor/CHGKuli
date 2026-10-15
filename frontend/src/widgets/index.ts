@@ -7,3 +7,7 @@ export { ProfileInfoTab } from './profile-info-tab';
 export { ProfileStatsTab } from './profile-stats-tab';
 export { ProfileQuestionsTab } from './profile-questions-tab';
 export { ProfileGamesTab } from './profile-games-tab';
+export { GameSettingsModal } from './game-settings-modal';
+export { AddPlayerModal } from './add-player-modal';
+export { GameFiltersSummary } from './game-filters-summary';
+export { GameFiltersModal } from './game-filters-modal';
