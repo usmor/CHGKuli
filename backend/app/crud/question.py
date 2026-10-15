@@ -186,5 +186,38 @@ class CRUDQuestion(CRUDBase):
 
         return list(result.scalars().all()), total
 
+    async def count_available(
+        self,
+        session: AsyncSession,
+        author_ids: Optional[List[int]] = None,
+        tournament_ids: Optional[List[int]] = None,
+        year_from: Optional[int] = None,
+        year_to: Optional[int] = None,
+        exclude_question_ids: Optional[List[int]] = None,
+    ) -> int:
+        query = select(func.count(func.distinct(Question.id))).select_from(Question)
+
+        if author_ids:
+            query = query.join(
+                question_author_association,
+                question_author_association.c.question_id == Question.id,
+            ).where(question_author_association.c.author_id.in_(author_ids))
+
+        if tournament_ids:
+            query = query.where(Question.tournament_id.in_(tournament_ids))
+
+        if year_from or year_to:
+            query = query.join(Question.tournament)
+            if year_from:
+                query = query.where(Tournament.year >= year_from)
+            if year_to:
+                query = query.where(Tournament.year <= year_to)
+
+        if exclude_question_ids:
+            query = query.where(Question.id.notin_(exclude_question_ids))
+
+        result = await session.execute(query)
+        return result.scalar() or 0
+
 
 question_crud = CRUDQuestion(Question)

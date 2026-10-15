@@ -78,6 +78,7 @@ class GameQuestionItem(BaseModel):
     id: int
     order: int
     is_answered: bool
+    is_seen: bool
     time_spent_seconds: Optional[int] = None
     question: "Question"
 

@@ -132,6 +132,7 @@ class GameQuestion(Base, CommonMixin):
 
     order: Mapped[int] = mapped_column(Integer, nullable=False)
     is_answered: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_seen: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     time_spent_seconds: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     game: Mapped["Game"] = relationship("Game", back_populates="questions")

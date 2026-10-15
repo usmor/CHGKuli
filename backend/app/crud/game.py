@@ -12,6 +12,7 @@ from app.models.game import GameStatus
 from app.models.game_hidden import GameHidden
 
 
+
 class CRUDGame(CRUDBase):
     async def get_with_relations(
         self,
@@ -298,6 +299,57 @@ class CRUDGame(CRUDBase):
             select(GameHidden.game_id).where(GameHidden.user_id == user_id)
         )
         return set(result.scalars().all())
+
+    async def mark_seen(
+        self,
+        session: AsyncSession,
+        game: Game,
+        question_id: int,
+        time_spent_seconds: Optional[int] = None,
+    ) -> Game:
+        """Отметить вопрос как увиденный"""
+        gq = next(
+            (q for q in game.questions if q.question_id == question_id),
+            None,
+        )
+        if not gq:
+            raise ValueError("Вопрос не найден в игре")
+        if gq.is_seen:
+            raise ValueError("На этот вопрос уже дан ответ")
+
+        gq.is_seen = True
+        if time_spent_seconds is not None:
+            gq.time_spent_seconds = time_spent_seconds
+
+        await session.flush()
+        return game
+
+    async def answer_question(
+        self,
+        session: AsyncSession,
+        game: Game,
+        question_id: int,
+        time_spent_seconds: Optional[int] = None,
+    ) -> Game:
+        """Отметить вопрос как правильно отвеченный."""
+        gq = next(
+            (q for q in game.questions if q.question_id == question_id),
+            None,
+        )
+        if not gq:
+            raise ValueError("Вопрос не найден в игре")
+        if gq.is_seen:
+            raise ValueError("На этот вопрос уже дан ответ")
+
+        gq.is_seen = True
+        gq.is_answered = True
+        if time_spent_seconds is not None:
+            gq.time_spent_seconds = time_spent_seconds
+
+        game.answered_count += 1
+
+        await session.flush()
+        return game
 
 
 game_crud = CRUDGame(Game)

@@ -192,14 +192,21 @@ async def start_game(
     )
 
     if not questions:
-        raise HTTPException(400, "Не найдено вопросов по заданным фильтрам")
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "По заданным фильтрам не найдено ни одного вопроса. "
+                "Измените фильтры или уменьшите количество вопросов."
+            ),
+        )
 
     warning = None
     if len(questions) < game.questions_count:
         warning = (
-            f"Найдено только {len(questions)} вопросов из {game.questions_count} "
-            f"Остальные подходящие вопросы уже пройдены. "
-            f"В игре будет только {len(questions)}."
+            f"Найдено только {len(questions)} вопросов "
+            f"из {game.questions_count}. "
+            f"Уменьшите количество вопросов до {len(questions)} "
+            f"или измените фильтры."
         )
         game.questions_count = len(questions)
 
@@ -218,16 +225,40 @@ async def answer_question(
     if game.status != GameStatus.ACTIVE.value:
         raise HTTPException(400, "Игра не активна")
 
-    gq = next((q for q in game.questions if q.question_id == payload.question_id), None)
-    if not gq:
-        raise HTTPException(404, "Вопрос не найден в игре")
-    if gq.is_answered:
-        raise HTTPException(400, "Вопрос уже отвечен")
+    try:
+        await game_crud.answer_question(
+            session,
+            game,
+            payload.question_id,
+            payload.time_spent_seconds,
+        )
+    except ValueError as e:
+        raise HTTPException(400, str(e))
 
-    gq.is_answered = True
-    if payload.time_spent_seconds is not None:
-        gq.time_spent_seconds = payload.time_spent_seconds
-    game.answered_count += 1
+    await session.commit()
+    game = await game_crud.get_with_relations_or_404(game.id, session)
+    return GameSchema.from_orm_game(game)
+
+
+@router.post("/{game_id}/seen", response_model=GameSchema)
+async def mark_question_seen(
+    payload: GameAnswer,
+    game: Game = Depends(get_game_for_user),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """Отметить вопрос как увиденный."""
+    if game.status != GameStatus.ACTIVE.value:
+        raise HTTPException(400, "Игра не активна")
+
+    try:
+        await game_crud.mark_seen(
+            session,
+            game,
+            payload.question_id,
+            payload.time_spent_seconds,
+        )
+    except ValueError as e:
+        raise HTTPException(400, str(e))
 
     await session.commit()
     game = await game_crud.get_with_relations_or_404(game.id, session)
@@ -310,3 +341,32 @@ async def unhide_game(
     await game_crud.unhide_game(session, user.id, game.id)
     await session.commit()
     return
+
+
+@router.get("/{game_id}/available-questions")
+async def get_available_questions_count(
+    game: Game = Depends(get_setup_game_for_owner),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """Сколько вопросов доступно по фильтрам игры."""
+    user_ids: set[int] = set()
+    if game.owner_id is not None:
+        user_ids.add(game.owner_id)
+    for p in game.players:
+        user_ids.add(p.user_id)
+
+    exclude_ids = await progress_crud.get_passed_question_ids_for_users(
+        session, list(user_ids)
+    )
+
+    filters = game.filters or {}
+    count = await question_crud.count_available(
+        session,
+        author_ids=filters.get("author_ids") or None,
+        tournament_ids=filters.get("tournament_ids") or None,
+        year_from=filters.get("year_from"),
+        year_to=filters.get("year_to"),
+        exclude_question_ids=list(exclude_ids) if exclude_ids else None,
+    )
+
+    return {"available": count, "requested": game.questions_count}
