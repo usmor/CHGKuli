@@ -6,3 +6,4 @@ export { CustomAlert } from './alert';
 export { ScrollToTop } from './scroll-to-top';
 export { SortButton } from './sort-button';
 export { StatCard } from './stat-card';
+export { QuestionProgress } from './question-progress';

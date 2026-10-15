@@ -1,7 +1,7 @@
 import { AutoComplete } from '@features/autocomplete';
 import { Button, Divider, NumberInput, Stack, Text, Title } from '@mantine/core';
 import { FunnelIcon } from '@phosphor-icons/react';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useEffect, useState } from 'react';
 
 import type { QuestionFilters } from '@shared/lib/hooks';

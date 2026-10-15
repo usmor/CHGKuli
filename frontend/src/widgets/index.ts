@@ -11,3 +11,4 @@ export { GameSettingsModal } from './game-settings-modal';
 export { AddPlayerModal } from './add-player-modal';
 export { GameFiltersSummary } from './game-filters-summary';
 export { GameFiltersModal } from './game-filters-modal';
+export { StartWarningModal } from './start-warning-modal';

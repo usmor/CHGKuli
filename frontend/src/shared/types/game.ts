@@ -21,6 +21,7 @@ export type GameQuestionItem = {
   is_answered: boolean;
   time_spent_seconds: number | null;
   question: Question;
+  is_seen: boolean;
 };
 
 export type Game = {
