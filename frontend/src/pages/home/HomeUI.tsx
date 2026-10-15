@@ -1,4 +1,4 @@
-import { CustomAlert, CustomLoader } from '@shared/ui';
+import { CustomAlert, CustomLoader, Seo } from '@shared/ui';
 
 import { Banner, Carousel } from '@/widgets';
 
@@ -18,20 +18,23 @@ export const HomeUI = ({
   isError,
 }: HomeUIProps): React.JSX.Element => {
   return (
-    <div className={classes.content}>
-      <Banner />
-      <div className={classes.carouselContainer}>
-        {isError && (
-          <CustomAlert
-            title="Не удалось загрузить вопросы дня"
-            message="Попробуйте перезагрузить страницу позже"
-          />
-        )}
+    <>
+      <Seo title="ЧГКули — база вопросов «Что? Где? Когда?»" />
+      <div className={classes.content}>
+        <Banner />
+        <div className={classes.carouselContainer}>
+          {isError && (
+            <CustomAlert
+              title="Не удалось загрузить вопросы дня"
+              message="Попробуйте перезагрузить страницу позже"
+            />
+          )}
 
-        {isLoading && !isError && <CustomLoader />}
+          {isLoading && !isError && <CustomLoader />}
 
-        {!isLoading && !isError && <Carousel questions={questions} />}
+          {!isLoading && !isError && <Carousel questions={questions} />}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

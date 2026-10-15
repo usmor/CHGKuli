@@ -1,5 +1,7 @@
 import { useParams } from 'react-router-dom';
 
+import { Seo } from '@/shared/ui';
+
 import { GameLoader } from './GameLoader';
 import { GameSetup } from './setup';
 
@@ -15,5 +17,10 @@ export const Game = (): React.JSX.Element => {
     return <div>Некорректный id игры</div>;
   }
 
-  return <GameLoader gameId={gameId} />;
+  return (
+    <>
+      <Seo title="Игра" noIndex />
+      <GameLoader gameId={gameId} />;
+    </>
+  );
 };

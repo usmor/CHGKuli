@@ -1,6 +1,6 @@
 import { QuestionCard } from '@entities/index';
 import { Container, Title, Text, SimpleGrid, Group } from '@mantine/core';
-import { CustomAlert, CustomLoader, ScrollToTop, SortButton } from '@shared/ui';
+import { CustomAlert, CustomLoader, ScrollToTop, Seo, SortButton } from '@shared/ui';
 import { FiltersBar } from '@widgets/index';
 
 import type { QuestionFilters } from '@shared/lib/hooks';
@@ -36,6 +36,11 @@ export const AllQuestionsUI = ({
 }: AllQuestionsUIProps): React.JSX.Element => {
   return (
     <>
+      <Seo
+        title="Все вопросы"
+        description="Вся база вопросов ЧГК с фильтрами по автору, турниру и году."
+        url="/questions"
+      />
       <Container size="xl" py="xl">
         <div className={classes.layout}>
           <FiltersBar
