@@ -24,6 +24,7 @@ type GameActions = {
   claim: UseMutationResult<Game, Error, string>;
   addPlayer: UseMutationResult<GamePlayerShort, Error, AddPlayerPayload>;
   removePlayer: UseMutationResult<void, Error, number>;
+  markSeen: UseMutationResult<Game, Error, AnswerPayload>;
 };
 
 export const useGameActions = (gameId: number): GameActions => {
@@ -35,7 +36,9 @@ export const useGameActions = (gameId: number): GameActions => {
 
   const start = useMutation<Game, Error, void>({
     mutationFn: () => fetcher<Game>(`/game/${gameId}/start`, { method: 'POST' }),
-    onSuccess: invalidate,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['game', gameId], data);
+    },
   });
 
   const answer = useMutation<Game, Error, AnswerPayload>({
@@ -78,5 +81,14 @@ export const useGameActions = (gameId: number): GameActions => {
     onSuccess: invalidate,
   });
 
-  return { start, answer, finish, claim, addPlayer, removePlayer };
+  const markSeen = useMutation<Game, Error, AnswerPayload>({
+    mutationFn: (payload: AnswerPayload) =>
+      fetcher<Game>(`/game/${gameId}/seen`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
+    onSuccess: invalidate,
+  });
+
+  return { start, answer, finish, claim, addPlayer, removePlayer, markSeen };
 };

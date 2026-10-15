@@ -20,3 +20,7 @@ export { useCreateGame } from './useCreateGame';
 export { useGameActions } from './useGameActions';
 export { useUpdateGame } from './useUpdateGame';
 export { useClaimGame } from './useClaimGame';
+export { useGamePlayState, type GamePlayState } from './useGamePlayState';
+export { useGameTimer } from './useGameTimer';
+export { useTimerSound } from './useTimerSound';
+export { useAvailableQuestions } from './useAvailableQuestions';
