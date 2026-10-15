@@ -1,5 +1,6 @@
 import { Badge, Button, Card, Group, Modal, Stack, Text } from '@mantine/core';
 import { EyeIcon, EyeSlashIcon, PlayIcon } from '@phosphor-icons/react';
+import { Link } from 'react-router-dom';
 
 import { CustomAlert } from '@/shared/ui';
 
@@ -117,16 +118,19 @@ export const GameDetailsUI = ({
         />
       )}
       <Group justify="flex-end" mt="sm">
-        <Button
-          variant="light"
-          color="var(--soft-blue)"
-          size="md"
-          radius="md"
-          leftSection={<PlayIcon size={16} />}
-          disabled
-        >
-          {canContinue ? 'Продолжить игру' : 'Открыть игру'}
-        </Button>
+        {game.status !== 'finished' && (
+          <Button
+            component={Link}
+            variant="light"
+            color="var(--soft-blue)"
+            size="md"
+            radius="md"
+            leftSection={<PlayIcon size={16} />}
+            to={`/game/${game.id}`}
+          >
+            {game.status === 'setup' ? 'Продолжить настройку' : 'Продолжить игру'}
+          </Button>
+        )}
         {isHidden ? (
           <Button
             variant="subtle"
@@ -141,12 +145,12 @@ export const GameDetailsUI = ({
           </Button>
         ) : (
           <Button
-            variant="subtle"
             color="pink"
             size="md"
             radius="md"
             leftSection={<EyeSlashIcon size={16} />}
             onClick={onOpen}
+            variant="light"
           >
             Убрать из списка
           </Button>
@@ -177,6 +181,7 @@ export const GameDetailsUI = ({
               onClick={onHide}
               radius="md"
               size="md"
+              variant="light"
             >
               Убрать
             </Button>

@@ -1,6 +1,7 @@
-import { Accordion, Badge, Group, Stack, Text } from '@mantine/core';
-import { CalendarBlankIcon } from '@phosphor-icons/react';
+import { Accordion, Badge, Button, Group, Stack, Text } from '@mantine/core';
+import { CalendarBlankIcon, PlayIcon } from '@phosphor-icons/react';
 import { formatDateTime, gameStatusColor, gameStatusLabel } from '@shared/lib/utils';
+import { Link } from 'react-router-dom';
 
 import { GameDetails } from '../game-details';
 
@@ -54,6 +55,19 @@ export const GameAccordionItem = ({ game }: { game: GameShort }): React.JSX.Elem
             >
               {gameStatusLabel(game.status)}
             </Badge>
+            {game.status === 'active' && (
+              <Button
+                component={Link}
+                to={`/game/${game.id}`}
+                size="compact-md"
+                variant="light"
+                color="var(--soft-blue)"
+                leftSection={<PlayIcon size={14} />}
+                onClick={(e) => e.stopPropagation()}
+              >
+                Продолжить
+              </Button>
+            )}
           </Group>
         </Group>
       </Accordion.Control>
