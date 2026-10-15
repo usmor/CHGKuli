@@ -11,6 +11,7 @@ import {
   Profile,
   QuestionDetail,
   Register,
+  Game,
 } from '@/pages';
 
 import classes from './App.module.css';
@@ -27,7 +28,8 @@ const App = (): React.JSX.Element => {
           <Route path="/about" element={<About />} />
           <Route path="/questions" element={<AllQuestions />} />
           <Route path="/questions/:id" element={<QuestionDetail />} />
-          <Route path="/game" element={<div>Игроровой режим</div>} />
+          <Route path="/game" element={<Game />} />
+          <Route path="/game/:gameId" element={<Game />} />
           <Route path="*" element={<NotFound />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<Profile />} />

@@ -15,8 +15,7 @@ export const Login = (): React.JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from =
-    (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/profile';
+  const from = (location.state as { from?: string } | null)?.from ?? '/profile';
 
   const form = useForm<LoginFormValues>({
     initialValues: {

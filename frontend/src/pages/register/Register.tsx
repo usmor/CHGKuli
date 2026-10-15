@@ -1,7 +1,7 @@
 import { useForm } from '@mantine/form';
 import { useAuth } from '@shared/lib/hooks';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ApiError } from '@/shared/lib/api/fetcher';
 
@@ -13,6 +13,8 @@ export const Register = (): React.JSX.Element => {
 
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from ?? '/profile';
 
   const form = useForm<RegisterFormValues>({
     initialValues: {
@@ -52,7 +54,7 @@ export const Register = (): React.JSX.Element => {
     try {
       await register(values.email, values.username, values.password);
 
-      void navigate('/profile', { replace: true });
+      void navigate(from, { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.detail === 'USERNAME_ALREADY_EXISTS') {

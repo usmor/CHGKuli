@@ -7,3 +7,4 @@ export { AllQuestions } from './all-questions';
 export { Login } from './login';
 export { Register } from './register';
 export { Profile } from './profile';
+export { Game } from './game';
