@@ -22,7 +22,14 @@ export const fetcher = async <T>(path: string, options?: RequestInit): Promise<T
   const token = localStorage.getItem(TOKEN_KEY);
   const guestToken = useGameStore.getState().guestToken;
 
-  const response = await fetch(`${API_URL}${path}`, {
+  const [basePath, queryString] = path.split('?');
+
+  const safeBasePath =
+    basePath.endsWith('/') || basePath === '' ? basePath : `${basePath}/`;
+
+  const safePath = queryString ? `${safeBasePath}?${queryString}` : safeBasePath;
+
+  const response = await fetch(`${API_URL}${safePath}`, {
     ...options,
     headers: {
       ...(options?.body instanceof FormData
