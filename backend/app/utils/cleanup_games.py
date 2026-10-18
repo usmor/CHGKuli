@@ -14,7 +14,12 @@ async def cleanup(older_than_hours: int = 24) -> int:
 
 if __name__ == "__main__":
     hours = int(sys.argv[1]) if len(sys.argv) > 1 else 24
-    deleted = asyncio.run(cleanup(hours))
-    print(
-        f"Удалено {deleted} устаревших игр неавторизованных гостей (старше {hours} ч.)"
-    )
+    try:
+        deleted = asyncio.run(cleanup(hours))
+        print(
+            f"Удалено {deleted} устаревших игр неавторизованных гостей (старше {hours} ч.)"
+        )
+        sys.exit(0)
+    except Exception as e:
+        print(f"Ошибка при выполнении очистки: {e}")
+        sys.exit(1)
