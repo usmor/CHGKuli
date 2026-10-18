@@ -1,6 +1,6 @@
-import { Button, Group, Text } from '@mantine/core';
-import { PauseIcon, PlayIcon, TimerIcon } from '@phosphor-icons/react';
-import { useEffect } from 'react';
+import { Badge, Button, Group, Text } from '@mantine/core';
+import { BookOpenIcon, PauseIcon, PlayIcon, TimerIcon } from '@phosphor-icons/react';
+import { useEffect, useState } from 'react';
 
 import { useGameTimer } from '@/shared/lib/hooks';
 
@@ -9,6 +9,7 @@ type QuestionTimerProps = {
   resetKey: number;
   onTimeUp: () => void;
   onTick: (elapsed: number) => void;
+  readTimeSeconds?: number;
 };
 
 export const QuestionTimer = ({
@@ -16,10 +17,36 @@ export const QuestionTimer = ({
   resetKey,
   onTimeUp,
   onTick,
+  readTimeSeconds = 10,
 }: QuestionTimerProps): React.JSX.Element => {
+  const [readSecondsLeft, setReadSecondsLeft] = useState(readTimeSeconds);
+  const [isPreparing, setIsPreparing] = useState(true);
+
+  useEffect(() => {
+    setReadSecondsLeft(readTimeSeconds);
+    setIsPreparing(true);
+  }, [resetKey, readTimeSeconds]);
+
+  useEffect(() => {
+    if (!isPreparing || readSecondsLeft <= 0) return;
+
+    const interval = window.setInterval(() => {
+      setReadSecondsLeft((s) => {
+        if (s <= 1) {
+          clearInterval(interval);
+          setIsPreparing(false);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+
+    return (): void => clearInterval(interval);
+  }, [isPreparing, readSecondsLeft]);
+
   const timer = useGameTimer({
     seconds,
-    enabled: true,
+    enabled: !isPreparing,
     onTimeout: onTimeUp,
     resetKey,
   });
@@ -29,6 +56,21 @@ export const QuestionTimer = ({
   useEffect((): void => {
     onTick(elapsed);
   }, [elapsed, onTick]);
+
+  if (isPreparing) {
+    return (
+      <Badge
+        size="lg"
+        variant="light"
+        color="var(--easter-purple)"
+        radius="md"
+        leftSection={<BookOpenIcon size={16} />}
+        styles={{ label: { fontSize: 14 } }}
+      >
+        Время на чтение
+      </Badge>
+    );
+  }
 
   if (timer.isTimeUp) {
     return (
