@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import List, Optional, Tuple
 
 from fastapi import HTTPException
@@ -10,7 +10,6 @@ from app.crud.base import CRUDBase
 from app.models import Game, GamePlayer, GameQuestion, User
 from app.models.game import GameStatus
 from app.models.game_hidden import GameHidden
-
 
 
 class CRUDGame(CRUDBase):
@@ -78,9 +77,7 @@ class CRUDGame(CRUDBase):
         where_clause = and_(*conditions)
 
         count_result = await session.execute(
-            select(func.count())
-            .select_from(Game)
-            .where(where_clause)
+            select(func.count()).select_from(Game).where(where_clause)
         )
         total = count_result.scalar() or 0
 
@@ -350,6 +347,26 @@ class CRUDGame(CRUDBase):
 
         await session.flush()
         return game
+
+    async def delete_stale_guest_games(
+        self,
+        session: AsyncSession,
+        older_than_hours: int = 24,
+    ) -> int:
+        """
+        Удалить все игры гостей, созданные более N часов назад.
+        Возвращает количество удалённых игр.
+        """
+        threshold = datetime.now(timezone.utc) - timedelta(hours=older_than_hours)
+
+        result = await session.execute(
+            delete(Game).where(
+                Game.owner_id.is_(None),
+                Game.created_at < threshold,
+            )
+        )
+        await session.commit()
+        return result.rowcount or 0
 
 
 game_crud = CRUDGame(Game)
