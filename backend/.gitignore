@@ -33,10 +33,6 @@ Thumbs.db
 *.log
 logs/
 
-# Data files
-data/*.csv
-data/*.pkl
-
 # Backup
 *.bak
 backups/
