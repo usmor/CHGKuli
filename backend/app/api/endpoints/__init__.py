@@ -5,3 +5,4 @@ from .user import router as user_router  # noqa
 from .progress import router as progress_router  # noqa
 from .game import router as game_router  # noqa
 from .stats import router as stats_router  # noqa
+from .health import router as health_router  # noqa
