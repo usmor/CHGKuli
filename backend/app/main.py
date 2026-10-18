@@ -5,14 +5,14 @@ from app.core.config import settings
 
 from .api.routers import main_router
 
-app = FastAPI(title=settings.app_title)
+app = FastAPI(title=settings.app_title, redirect_slashes=False)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://chgkuli.up.railway.app"
+        "https://chgkuli.up.railway.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
