@@ -1,0 +1,59 @@
+.tabs {
+  align-self: center;
+  width: 100%;
+}
+
+.tabsList {
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--purple-haze);
+}
+
+.tabsList::before {
+  display: none;
+}
+
+.tab {
+  padding: 10px 16px;
+  font-weight: 500;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+  outline: none;
+  transition: background-color 150ms ease;
+}
+
+.tabLabel {
+  font-size: 16px;
+}
+
+.tab:hover {
+  background-color: var(--white);
+}
+
+.tab[data-active] {
+  color: var(--white);
+  font-weight: 600;
+  background-color: var(--soft-blue);
+  border: 1px solid var(--soft-blue);
+}
+
+.tab[data-active]::before {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background-color: var(--soft-blue);
+  content: '';
+}
+
+.tab[data-active]::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background-color: var(--soft-blue);
+  content: '';
+}

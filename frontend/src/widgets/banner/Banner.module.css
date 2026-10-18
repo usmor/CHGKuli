@@ -1,0 +1,41 @@
+.banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: center;
+  width: 90%;
+  height: 400px;
+  overflow: hidden;
+  background-color: rgb(255 255 255 / 70%);
+  border-radius: 10px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 50px;
+}
+
+.subtitle {
+  color: var(--purple-haze);
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 50px;
+}
+
+.stats {
+  margin-top: 8px;
+}
+
+.video {
+  display: block;
+  align-self: stretch;
+  width: 450px;
+  object-position: center;
+  object-fit: cover;
+}

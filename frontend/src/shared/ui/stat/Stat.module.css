@@ -1,0 +1,9 @@
+.statValue {
+  font-size: 24px;
+}
+
+.statLabel {
+  color: var(--mantine-color-dimmed);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

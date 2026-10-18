@@ -1,0 +1,1 @@
+export { GameFiltersSummary } from './GameFiltersSummary';

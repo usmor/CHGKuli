@@ -1,0 +1,1 @@
+export { ProfileGamesTab } from './ProfileGamesTab';

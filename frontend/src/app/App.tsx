@@ -1,0 +1,44 @@
+import { ProtectedRoute } from '@features/index';
+import { Header, Footer } from '@widgets/index';
+import { Route, Routes } from 'react-router-dom';
+
+import {
+  About,
+  AllQuestions,
+  Home,
+  Login,
+  NotFound,
+  Profile,
+  QuestionDetail,
+  Register,
+  Game,
+} from '@/pages';
+
+import classes from './App.module.css';
+
+const App = (): React.JSX.Element => {
+  return (
+    <div className={classes.app}>
+      <Header />
+      <main className={classes.main}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/questions" element={<AllQuestions />} />
+          <Route path="/questions/:id" element={<QuestionDetail />} />
+          <Route path="/game" element={<Game />} />
+          <Route path="/game/:gameId" element={<Game />} />
+          <Route path="*" element={<NotFound />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default App;

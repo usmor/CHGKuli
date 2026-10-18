@@ -1,0 +1,20 @@
+:root {
+  --bright-grey: #332c5c;
+  --purple-haze: #494369;
+  --mid-grey: #5e587a;
+  --white: #fff;
+  --crocus-purple: #8976fd;
+  --easter-purple: #c06ef3;
+  --light-turquoise: #6dedc3;
+  --selective-yelow: #fdba09;
+  --soft-blue: #7188ff;
+  --day-sky-blue: #6dcbff;
+
+  /* Шрифты */
+  --font-heading: 'Montserrat Variable', system-ui, sans-serif;
+  --font-body: 'Nunito Sans Variable', system-ui, sans-serif;
+
+  /* Mantine */
+  --mantine-font-family: var(--font-body);
+  --mantine-font-family-headings: var(--font-heading);
+}

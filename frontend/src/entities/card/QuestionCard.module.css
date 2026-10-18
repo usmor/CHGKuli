@@ -1,0 +1,43 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  height: 220px;
+  padding: 10px 15px;
+  color: inherit;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border 150ms ease;
+}
+
+.card:hover {
+  border: 2px solid var(--soft-blue);
+}
+
+.head {
+  flex-shrink: 0;
+}
+
+.tournament {
+  flex: 1;
+  min-width: 0;
+}
+
+.badge {
+  flex-shrink: 0;
+}
+
+.text {
+  display: -webkit-box;
+  flex: 1;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.authors {
+  flex-shrink: 0;
+  min-width: 0;
+}
