@@ -13,4 +13,5 @@ export const mockQuestions: Question[] = Array.from({ length: 10 }, (_, i) => ({
     year: 2023,
   },
   authors: [{ id: 1, name: 'Юлия Дидбаридзе' }],
+  author_ids: [1],
 }));

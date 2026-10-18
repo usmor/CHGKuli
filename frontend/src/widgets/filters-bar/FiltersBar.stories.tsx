@@ -38,7 +38,7 @@ const Wrapper = ({
     tournament_ids: [],
     year_from: null,
     year_to: null,
-    limit: 20,
+    sort: 'random',
     ...initialFilters,
   });
   const [authors, setAuthors] = useState<Author[]>(initialAuthors);
@@ -63,7 +63,7 @@ const Wrapper = ({
             tournament_ids: [],
             year_from: null,
             year_to: null,
-            limit: 20,
+            sort: 'random',
           });
         }}
       />
@@ -103,7 +103,6 @@ export const FullFilters: Story = {
       initialFilters={{
         year_from: 2009,
         year_to: 2023,
-        limit: 50,
       }}
       initialAuthors={[{ id: 1, name: 'Юлия Дидбаридзе' }]}
       initialTournaments={[{ id: 2, name: 'Кубок Москвы по ЧГК', year: 2009 }]}
