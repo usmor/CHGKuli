@@ -293,5 +293,5 @@ async def import_all_data(pickle_path: str = "chgk_data.pkl"):
 if __name__ == "__main__":
     import asyncio
 
-    file_path = sys.argv[1] if len(sys.argv) > 1 else "data/chgk_data.pkl"
+    file_path = sys.argv[1] if len(sys.argv) > 1 else "data/new_chgk_data.pkl"
     asyncio.run(import_all_data(file_path))
