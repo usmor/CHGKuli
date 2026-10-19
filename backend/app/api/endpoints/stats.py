@@ -8,7 +8,7 @@ from app.schemas.stats import SiteStats
 router = APIRouter()
 
 
-@router.get("/", response_model=SiteStats)
+@router.get("", response_model=SiteStats)
 async def get_site_stats(
     session: AsyncSession = Depends(get_async_session),
 ):

@@ -7,7 +7,7 @@ from app.core.db import get_async_session
 router = APIRouter()
 
 
-@router.get("/health")
+@router.get("/health/")
 async def health_check(session: AsyncSession = Depends(get_async_session)):
     try:
         await session.execute(text("SELECT 1"))

@@ -12,7 +12,7 @@ router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
-@router.post("/{question_id}/passed")
+@router.post("/{question_id}/passed/")
 async def mark_as_passed(
     question_id: int,
     session: SessionDep,
@@ -24,7 +24,7 @@ async def mark_as_passed(
     return {"status": "ok"}
 
 
-@router.delete("/{question_id}/passed")
+@router.delete("/{question_id}/passed/")
 async def unmark_as_passed(
     question_id: int,
     session: SessionDep,
@@ -40,7 +40,7 @@ async def unmark_as_passed(
     return {"status": "ok"}
 
 
-@router.get("/passed", response_model=UserProgressList)
+@router.get("/passed/", response_model=UserProgressList)
 async def get_passed_questions(
     session: SessionDep,
     current_user=Depends(fastapi_users.current_user(active=True)),
@@ -54,7 +54,7 @@ async def get_passed_questions(
     )
 
 
-@router.get("/passed/questions", response_model=QuestionListResponse)
+@router.get("/passed/questions/", response_model=QuestionListResponse)
 async def get_passed_questions_full(
     session: SessionDep,
     current_user=Depends(fastapi_users.current_user(active=True)),

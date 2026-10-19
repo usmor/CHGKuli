@@ -16,7 +16,7 @@ router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
-@router.get("/", response_model=QuestionListResponse)
+@router.get("", response_model=QuestionListResponse)
 async def get_all_questions(
     session: SessionDep,
     offset: int = Query(0, ge=0, description="Смещение"),
@@ -48,7 +48,7 @@ async def get_all_questions(
     )
 
 
-@router.get("/daily", response_model=list[Question])
+@router.get("/daily/", response_model=list[Question])
 async def get_daily_set(session: SessionDep, count: int = Query(10, ge=1, le=50)):
     questions = await question_crud.get_daily_set(
         count=count, session=session, relations=["tournament", "authors"]
@@ -57,7 +57,7 @@ async def get_daily_set(session: SessionDep, count: int = Query(10, ge=1, le=50)
     return questions
 
 
-@router.post("/set", response_model=list[Question])
+@router.post("/set/", response_model=list[Question])
 async def get_question_set(
     request: QuestionSetRequest,
     session: SessionDep,
@@ -81,7 +81,7 @@ async def get_question_set(
     return questions
 
 
-@router.get("/{question_id}", response_model=Question)
+@router.get("/{question_id}/", response_model=Question)
 async def get_question(question_id: int, session: SessionDep):
     """Получить вопрос по ID"""
     question = await question_crud.get(question_id, session)
