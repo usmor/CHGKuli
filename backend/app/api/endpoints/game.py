@@ -30,7 +30,7 @@ from app.schemas.game import (
 router = APIRouter()
 
 
-@router.post("/", response_model=GameWithToken, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=GameWithToken, status_code=status.HTTP_201_CREATED)
 async def create_game(
     payload: GameCreate,
     session: AsyncSession = Depends(get_async_session),
@@ -67,7 +67,7 @@ async def create_game(
     )
 
 
-@router.patch("/{game_id}", response_model=GameSchema)
+@router.patch("/{game_id}/", response_model=GameSchema)
 async def update_game_settings(
     payload: GameSettingsUpdate,
     game: Game = Depends(get_setup_game_for_owner),
@@ -88,7 +88,7 @@ async def update_game_settings(
     return GameSchema.from_orm_game(game)
 
 
-@router.get("/my", response_model=list[GameShort])
+@router.get("/my/", response_model=list[GameShort])
 async def get_my_games(
     limit: int = 20,
     offset: int = 0,
@@ -120,7 +120,7 @@ async def get_game(
     return GameSchema.from_orm_game(game)
 
 
-@router.post("/{game_id}/players", response_model=GamePlayerShort, status_code=201)
+@router.post("/{game_id}/players/", response_model=GamePlayerShort, status_code=201)
 async def add_player(
     payload: GamePlayerAdd,
     game: Game = Depends(get_setup_game_for_owner),
@@ -144,7 +144,7 @@ async def add_player(
     return GamePlayerShort.from_player(player)
 
 
-@router.delete("/{game_id}/players/{user_id}", status_code=204)
+@router.delete("/{game_id}/players/{user_id}/", status_code=204)
 async def remove_player(
     user_id: int,
     game: Game = Depends(get_setup_game_for_owner),
@@ -162,7 +162,7 @@ async def remove_player(
     await session.commit()
 
 
-@router.post("/{game_id}/start", response_model=GameSchema)
+@router.post("/{game_id}/start/", response_model=GameSchema)
 async def start_game(
     game: Game = Depends(get_setup_game_for_owner),
     session: AsyncSession = Depends(get_async_session),
@@ -216,7 +216,7 @@ async def start_game(
     return GameSchema.from_orm_game(game, warning=warning)
 
 
-@router.post("/{game_id}/answer", response_model=GameSchema)
+@router.post("/{game_id}/answer/", response_model=GameSchema)
 async def answer_question(
     payload: GameAnswer,
     game: Game = Depends(get_game_for_user),
@@ -240,7 +240,7 @@ async def answer_question(
     return GameSchema.from_orm_game(game)
 
 
-@router.post("/{game_id}/seen", response_model=GameSchema)
+@router.post("/{game_id}/seen/", response_model=GameSchema)
 async def mark_question_seen(
     payload: GameAnswer,
     game: Game = Depends(get_game_for_user),
@@ -265,7 +265,7 @@ async def mark_question_seen(
     return GameSchema.from_orm_game(game)
 
 
-@router.post("/{game_id}/finish", response_model=GameSchema)
+@router.post("/{game_id}/finish/", response_model=GameSchema)
 async def finish_game(
     game: Game = Depends(get_game_for_owner),
     session: AsyncSession = Depends(get_async_session),
@@ -293,7 +293,7 @@ async def finish_game(
     return GameSchema.from_orm_game(game)
 
 
-@router.post("/{game_id}/claim", response_model=GameSchema)
+@router.post("/{game_id}/claim/", response_model=GameSchema)
 async def claim_game(
     payload: GameClaim,
     game_id: int,
@@ -319,7 +319,7 @@ async def claim_game(
     return GameSchema.from_orm_game(game)
 
 
-@router.post("/{game_id}/hide", status_code=204)
+@router.post("/{game_id}/hide/", status_code=204)
 async def hide_game(
     game: Game = Depends(get_game_for_user),
     session: AsyncSession = Depends(get_async_session),
@@ -331,7 +331,7 @@ async def hide_game(
     return
 
 
-@router.delete("/{game_id}/hide", status_code=204)
+@router.delete("/{game_id}/hide/", status_code=204)
 async def unhide_game(
     game: Game = Depends(get_game_for_user),
     session: AsyncSession = Depends(get_async_session),
@@ -343,7 +343,7 @@ async def unhide_game(
     return
 
 
-@router.get("/{game_id}/available-questions")
+@router.get("/{game_id}/available-questions/")
 async def get_available_questions_count(
     game: Game = Depends(get_setup_game_for_owner),
     session: AsyncSession = Depends(get_async_session),
