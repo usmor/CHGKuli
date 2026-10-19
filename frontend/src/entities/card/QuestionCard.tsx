@@ -16,13 +16,19 @@ export const QuestionCard = ({
   previewLength,
   width = 400,
 }: QuestionCardProps): React.JSX.Element => {
-  const { isPassed } = useQuestionProgress(question.id);
+  const { isPassed, togglePassed, isLoading } = useQuestionProgress(question.id);
   return (
     <QuestionCardUI
       question={question}
       previewLength={previewLength}
       width={width}
-      badge={<ProgressBadge isPassed={isPassed} />}
+      badge={
+        <ProgressBadge
+          isPassed={isPassed}
+          onRemove={togglePassed}
+          isLoading={isLoading}
+        />
+      }
     />
   );
 };

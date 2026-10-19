@@ -76,7 +76,7 @@ export const AllQuestionsUI = ({
                         onChange={(sort) => onFiltersChange({ ...filters, sort })}
                       />
                     </Group>
-                    <SimpleGrid cols={2}>
+                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
                       {questions.map((q) => (
                         <QuestionCard key={q.id} question={q} />
                       ))}

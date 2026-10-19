@@ -25,7 +25,11 @@ createRoot(document.getElementById('root')!).render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary fallback={<ServerError />}>
-          <MantineProvider defaultColorScheme="auto" theme={theme}>
+          <MantineProvider
+            defaultColorScheme="light"
+            forceColorScheme="light"
+            theme={theme}
+          >
             <Notifications position="top-right" />
             <BrowserRouter>
               <AuthProvider>

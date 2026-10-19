@@ -16,7 +16,7 @@ async def autocomplete_tournaments(
     session: SessionDep,
     q: Optional[str] = Query(None),
     ids: Optional[List[int]] = Query(None),
-    limit: int = Query(10, ge=1, le=20),
+    limit: int = Query(50, ge=1, le=100),
 ):
     """Автокомплит турниров."""
     if ids:

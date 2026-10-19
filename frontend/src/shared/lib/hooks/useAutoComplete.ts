@@ -12,7 +12,7 @@ export const useAutoComplete = (
     queryKey: ['autocomplete', type, query],
     queryFn: () =>
       fetcher<SearchItem[]>(
-        `/${type}/autocomplete?q=${encodeURIComponent(query)}&limit=10`
+        `/${type}/autocomplete?q=${encodeURIComponent(query)}&limit=50`
       ),
     enabled: query.length >= 2,
     staleTime: 1000 * 60 * 5,

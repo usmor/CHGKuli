@@ -20,7 +20,7 @@ export const Game = (): React.JSX.Element => {
   return (
     <>
       <Seo title="Игра" noIndex />
-      <GameLoader gameId={gameId} />;
+      <GameLoader gameId={gameId} />
     </>
   );
 };
