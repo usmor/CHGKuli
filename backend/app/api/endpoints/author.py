@@ -11,7 +11,7 @@ router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
-@router.get("/autocomplete/", response_model=List[Author])
+@router.get("/autocomplete", response_model=List[Author])
 async def autocomplete_authors(
     session: SessionDep,
     q: Optional[str] = Query(None),
@@ -39,7 +39,7 @@ async def get_authors(
     return authors[skip : skip + limit]
 
 
-@router.get("/{author_id}/", response_model=Author)
+@router.get("/{author_id}", response_model=Author)
 async def get_author(
     session: SessionDep,
     author_id: int,

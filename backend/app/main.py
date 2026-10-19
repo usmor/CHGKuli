@@ -5,7 +5,7 @@ from app.core.config import settings
 
 from .api.routers import main_router
 
-app = FastAPI(title=settings.app_title, redirect_slashes=False)
+app = FastAPI(title=settings.app_title)
 
 app.add_middleware(
     CORSMiddleware,

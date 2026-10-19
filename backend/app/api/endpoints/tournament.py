@@ -11,7 +11,7 @@ router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_async_session)]
 
 
-@router.get("/autocomplete/", response_model=List[Tournament])
+@router.get("/autocomplete", response_model=List[Tournament])
 async def autocomplete_tournaments(
     session: SessionDep,
     q: Optional[str] = Query(None),
@@ -39,7 +39,7 @@ async def get_tournaments(
     return tournaments[skip : skip + limit]
 
 
-@router.get("/{tournament_id}/", response_model=Tournament)
+@router.get("/{tournament_id}", response_model=Tournament)
 async def get_tournament(tournament_id: int, session: SessionDep):
     """Получить турнир по ID"""
     tournament = await tournament_crud.get(tournament_id, session)
