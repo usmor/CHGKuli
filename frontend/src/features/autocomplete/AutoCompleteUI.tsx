@@ -62,7 +62,8 @@ export const AutoCompleteUI = ({
           color,
         },
         dropdown: {
-          maxHeight: 'none',
+          maxHeight: '300px',
+          overflowY: 'auto',
         },
       }}
     />

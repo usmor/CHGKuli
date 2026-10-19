@@ -31,7 +31,7 @@ const questionsJoke = (n: number): string => {
 };
 
 const gamesJoke = (n: number): string => {
-  if (n === 0) return 'Пока ни одного. Но ты только начинаешь!';
+  if (n === 0) return 'Пока ни одной. Но ты только начинаешь!';
   if (n === 1) return 'С чего-то надо было начать.';
   if (n < 5) return 'Первые игры. Осваиваешься.';
   if (n < 10) return 'Затягивает, да?';

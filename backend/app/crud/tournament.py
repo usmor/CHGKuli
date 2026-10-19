@@ -11,7 +11,7 @@ class CRUDTournament(CRUDBase):
         self,
         session: AsyncSession,
         query: str,
-        limit: int = 10,
+        limit: int = 50,
     ) -> List[Tournament]:
         """Поиск турниров по имени"""
         result = await session.execute(

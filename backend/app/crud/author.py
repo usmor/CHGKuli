@@ -11,7 +11,7 @@ class CRUDAuthor(CRUDBase):
         self,
         session: AsyncSession,
         query: str,
-        limit: int = 10,
+        limit: int = 50,
     ) -> List[Author]:
         """Поиск авторов по имени"""
         result = await session.execute(

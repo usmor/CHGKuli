@@ -148,12 +148,12 @@ class CRUDQuestion(CRUDBase):
         # Сортировка
         if sort == "year_desc":
             query = query.join(Question.tournament).order_by(
-                desc(Tournament.year),
+                desc(Tournament.year).nullslast(),
                 desc(Question.id),
             )
         elif sort == "year_asc":
             query = query.join(Question.tournament).order_by(
-                asc(Tournament.year),
+                asc(Tournament.year).nullslast(),
                 asc(Question.id),
             )
         elif sort == "author":
