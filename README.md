@@ -43,9 +43,13 @@
 
 ---
 
-## 📄 License
+## 📄 License & Usage
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is provided for **portfolio and educational purposes only**. 
+
+The source code is publicly available so you can explore the implementation, but **you may not copy, modify, distribute, or use this code for commercial or personal projects without my explicit permission.** 
+
+All rights reserved © 2026 Anna Lutsenko.
 
 *The question database is sourced from [db.chgk.info](https://db.chgk.info) and belongs to the original authors. The license applies only to the application code.*
 
