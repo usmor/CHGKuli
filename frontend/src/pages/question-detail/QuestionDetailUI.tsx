@@ -55,12 +55,7 @@ export const QuestionDetailUI = {
               ← Скорее назад
             </Anchor>
 
-            <Group gap="md" wrap="nowrap">
-              {tournament?.name && (
-                <Text className={classes.tournament} truncate>
-                  {tournament?.name}
-                </Text>
-              )}
+            <Group gap="md" wrap="nowrap" justify="flex-end">
               {isPassed && (
                 <Badge
                   color="var(--crocus-purple)"
