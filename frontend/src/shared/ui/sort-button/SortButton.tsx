@@ -22,9 +22,6 @@ type SortButtonProps = {
 };
 
 export const SortButton = ({ value, onChange }: SortButtonProps): React.JSX.Element => {
-  const currentLabel =
-    SORT_OPTIONS.find((o) => o.value === value)?.label ?? 'Случайный порядок';
-
   return (
     <Menu position="bottom-end" shadow="md" width={220}>
       <Menu.Target>
@@ -33,7 +30,7 @@ export const SortButton = ({ value, onChange }: SortButtonProps): React.JSX.Elem
           color="var(--soft-blue)"
           leftSection={<ArrowsDownUpIcon size={16} />}
         >
-          {currentLabel}
+          Сортировка
         </Button>
       </Menu.Target>
 
