@@ -9,7 +9,6 @@ type QuestionCardUIProps = {
   question: Question;
   previewLength?: number;
   badge?: React.ReactNode;
-  width: number;
 };
 
 const PLACEHOLDER = '—';
@@ -18,7 +17,6 @@ export const QuestionCardUI = ({
   question,
   previewLength = 150,
   badge,
-  width = 400,
 }: QuestionCardUIProps): React.JSX.Element => {
   const preview =
     question.question_text.length > previewLength
@@ -37,7 +35,6 @@ export const QuestionCardUI = ({
       className={classes.card}
       radius="md"
       withBorder
-      w={width}
     >
       <Group justify="space-between" wrap="nowrap" gap="sm" className={classes.head}>
         <Text size="sm" c="dimmed" className={classes.tournament} truncate>

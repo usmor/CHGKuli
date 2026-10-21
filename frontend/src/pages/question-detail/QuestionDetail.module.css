@@ -20,11 +20,6 @@
   text-transform: uppercase;
 }
 
-.tournament {
-  flex: 1;
-  min-width: 0;
-}
-
 .button {
   &:disabled,
   &[data-disabled] {
@@ -35,6 +30,12 @@
 
 @media (width <= 48em) {
   .question {
-    font-size: 22px;
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .inner :global(.mantine-Badge-root) {
+    height: 26px;
+    font-size: 11px;
   }
 }

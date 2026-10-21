@@ -39,7 +39,7 @@ export const RegisterUI = ({
     <>
       <Seo title="Регистрация" noIndex />
       <Center>
-        <Card withBorder padding="xl" w={400} mt={20}>
+        <Card withBorder w="100%" className={classes.card}>
           <form
             onSubmit={(e) => {
               e.preventDefault();

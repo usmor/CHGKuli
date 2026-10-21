@@ -1,4 +1,4 @@
-import { Container, Group, Text } from '@mantine/core';
+import { Container, Group, Text, UnstyledButton } from '@mantine/core';
 import { Link } from '@shared/ui/link';
 
 import classes from './Footer.module.css';
@@ -12,11 +12,15 @@ export const FooterUI = ({
   sourceUrl = 'https://db.chgk.info',
   githubUrl = 'https://github.com/usmor/CHGKuli',
 }: FooterUIProps): React.JSX.Element => {
+  const scrollToTop = (): void => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className={classes.footer}>
-      <Container size="lg" className={classes.inner}>
+      <Container size="lg" className={classes.topRow}>
         <Text>© {new Date().getFullYear()} CHGKuli</Text>
-        <Group gap="lg">
+        <Group gap="lg" className={classes.linksGroup}>
           <Link
             href={sourceUrl}
             text="Источник данных"
@@ -32,10 +36,16 @@ export const FooterUI = ({
             c="var(--purple-haze)"
           />
         </Group>
-        <Link href="#" text="Скорее наверх ↑" c="var(--purple-haze)" />
+
+        <UnstyledButton onClick={scrollToTop} className={classes.scrollButton}>
+          <Text c="var(--purple-haze)" fw={500}>
+            Скорее наверх ↑
+          </Text>
+        </UnstyledButton>
       </Container>
-      <Container className={classes.inner} ta="center" display="block">
-        <Text size="xs" c="dimmed">
+
+      <Container size="lg" className={classes.bottomRow}>
+        <Text size="xs" c="dimmed" ta="center">
           Все вопросы принадлежат их авторам. Сайт не претендует на права.
         </Text>
       </Container>
