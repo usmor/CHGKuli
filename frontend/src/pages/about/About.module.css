@@ -17,12 +17,12 @@
 }
 
 .tab {
-  border: 1px solid transparent;
-  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
   padding: 10px 16px;
-  outline: none;
   font-weight: 500;
   background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+  outline: none;
   transition: background-color 150ms ease;
 }
 
@@ -35,21 +35,22 @@
 }
 
 .tab[data-active] {
-  border: 1px solid var(--soft-blue);
   color: var(--white);
   font-weight: 600;
   background-color: var(--soft-blue);
+  border: 1px solid var(--soft-blue);
 }
+
 .tab[data-active]::before,
 .tab[data-active]::after {
   display: none;
 }
 
-
 @media (width <= 992px) {
   .tab {
     padding: 8px 12px;
   }
+
   .tabLabel {
     font-size: 14px;
   }
@@ -59,7 +60,7 @@
   .tabsList {
     gap: 4px;
   }
-  
+
   .tab {
     flex: 1 1 auto;
     justify-content: center;
@@ -76,9 +77,8 @@
     flex: 1 1 45%;
     padding: 8px 4px;
   }
-  
+
   .tabLabel {
     font-size: 12px;
   }
-
 }

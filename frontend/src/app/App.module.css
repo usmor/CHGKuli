@@ -8,13 +8,13 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  width: 100%;
   min-width: 60%;
   max-width: 1440px;
   min-height: 75vh;
+  margin: 0 auto;
   padding-inline: 100px;
   padding-block: 60px 100px;
-  margin: 0 auto; 
-  width: 100%;
 }
 
 @media (width <= 1024px) {

@@ -68,7 +68,9 @@
     font-size: 18px;
     text-decoration: none;
     border-radius: var(--mantine-radius-md);
-    transition: background-color 150ms ease, color 150ms ease;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease;
   }
 
   .mobileLink:hover {
