@@ -1,7 +1,27 @@
+.card {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+  padding: 40px;
+}
+
 .link {
   color: var(--purple-haze);
 }
 
 .link:hover {
   text-decoration: underline;
+}
+
+@media (width <= 480px) {
+  .card {
+    padding: 24px 16px; 
+  }
+
+  .card :global(.mantine-TextInput-input),
+  .card :global(.mantine-PasswordInput-input) {
+    height: 36px;
+    min-height: 36px;
+    font-size: 14px;
+  }
 }

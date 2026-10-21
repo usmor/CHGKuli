@@ -38,7 +38,7 @@ export const LoginUI = ({
     <>
       <Seo title="Вход" noIndex />
       <Center>
-        <Card withBorder padding="xl" w={400} mt={20}>
+        <Card withBorder w="100%" className={classes.card}>
           <form onSubmit={form.onSubmit(onSubmit)} noValidate>
             <Stack gap="md">
               {serverError && (
