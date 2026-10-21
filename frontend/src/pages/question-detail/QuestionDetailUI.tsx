@@ -10,6 +10,7 @@ import {
   Text,
   Tooltip,
 } from '@mantine/core';
+import { DiceFiveIcon } from '@phosphor-icons/react';
 import { CustomAlert, CustomLoader, Seo } from '@shared/ui';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,6 +23,8 @@ type QuestionDetailUIProps = {
   isPassed: boolean;
   isAuthorized: boolean;
   onTogglePassed: () => void;
+  onRandomQuestion: () => void;
+  isRandomLoading: boolean;
 };
 
 export const QuestionDetailUI = {
@@ -30,6 +33,8 @@ export const QuestionDetailUI = {
     isPassed,
     onTogglePassed,
     isAuthorized,
+    onRandomQuestion,
+    isRandomLoading,
   }: QuestionDetailUIProps): React.JSX.Element => {
     const authors = question.authors.map((a) => a.name).join(', ');
     const tournament = question.tournament;
@@ -132,6 +137,18 @@ export const QuestionDetailUI = {
                   leftSection={isPassed ? <CheckIcon size={16} /> : null}
                 >
                   {isPassed ? 'Снять отметку' : 'Пометить вопрос как пройденный'}
+                </Button>
+                <Button
+                  w="100%"
+                  variant="light"
+                  fz={16}
+                  onClick={() => onRandomQuestion()}
+                  loading={isRandomLoading}
+                  mt="lg"
+                  color="var(--crocus-purple)"
+                  leftSection={<DiceFiveIcon size={16} />}
+                >
+                  Следующий вопрос
                 </Button>
               </Box>
             </Tooltip>

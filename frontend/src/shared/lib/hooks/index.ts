@@ -25,3 +25,4 @@ export { useGameTimer } from './useGameTimer';
 export { useTimerSound } from './useTimerSound';
 export { useAvailableQuestions } from './useAvailableQuestions';
 export { useSiteStats, type SiteStats } from './useSiteStats';
+export { useRandomQuestion } from './useRandomQuestion';

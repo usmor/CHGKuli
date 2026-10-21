@@ -10,9 +10,9 @@
 
 .backButton {
   align-self: flex-start;
-  border: none;
   padding: 0;
   background: none;
+  border: none;
   cursor: pointer;
 }
 

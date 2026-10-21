@@ -219,5 +219,18 @@ class CRUDQuestion(CRUDBase):
         result = await session.execute(query)
         return result.scalar() or 0
 
+    async def get_random_question(self, session: AsyncSession) -> Question | None:
+        """Получить один случайный вопрос из базы."""
+        result = await session.execute(
+            select(Question)
+            .options(
+                selectinload(Question.tournament),
+                selectinload(Question.authors)
+            )
+            .order_by(func.random())
+            .limit(1)
+        )
+        return result.scalar_one_or_none()
+
 
 question_crud = CRUDQuestion(Question)

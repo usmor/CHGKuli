@@ -47,6 +47,14 @@ async def get_all_questions(
         has_more=offset + limit < total,
     )
 
+@router.get("/random", response_model=Question)
+async def get_random_question(session: SessionDep):
+    """Получить случайный вопрос."""
+    question = await question_crud.get_random_question(session)
+    if not question:
+        raise HTTPException(status_code=404, detail="Вопросы не найдены")
+    return question
+
 
 @router.get("/daily", response_model=list[Question])
 async def get_daily_set(session: SessionDep, count: int = Query(10, ge=1, le=50)):
