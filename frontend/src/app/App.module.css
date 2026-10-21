@@ -13,4 +13,20 @@
   min-height: 75vh;
   padding-inline: 100px;
   padding-block: 60px 100px;
+  margin: 0 auto; 
+  width: 100%;
+}
+
+@media (width <= 1024px) {
+  .main {
+    padding-inline: 30px;
+    padding-block: 40px 80px;
+  }
+}
+
+@media (width <= 768px) {
+  .main {
+    padding-inline: 16px;
+    padding-block: 40px 60px;
+  }
 }

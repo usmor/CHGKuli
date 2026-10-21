@@ -2,14 +2,15 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 400px;
   max-width: 400px;
   height: 220px;
+  border: 2px solid transparent;
   padding: 10px 15px;
   color: inherit;
   text-decoration: none;
-  border: 2px solid transparent;
-  cursor: pointer;
   transition: border 150ms ease;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -40,4 +41,28 @@
 .authors {
   flex-shrink: 0;
   min-width: 0;
+}
+
+@media (width < 768px) {
+  .card {
+    width: 320px;
+  }
+}
+
+@media (width <= 425px) {
+  .card {
+    width: 280px;
+  }
+}
+
+@media (width <= 375px) {
+  .card {
+    width: 250px;
+  }
+}
+
+@media (width <= 320px) {
+  .card {
+    width: 220px;
+  }
 }

@@ -25,7 +25,7 @@ export const BannerUI = ({ stats }: BannerUIProps): React.JSX.Element => {
           Играй. Думай. Отгадывай.
           <br />А еда, молитва и любовь подождут до конца турнира.
         </Text>
-        <Group gap="xl" className={classes.stats}>
+        <Group className={classes.stats}>
           <Stat
             value={stats ? formatStat(stats.questions, 1000) : '—'}
             label="вопросов"
@@ -36,7 +36,7 @@ export const BannerUI = ({ stats }: BannerUIProps): React.JSX.Element => {
             label="турниров"
           />
         </Group>
-        <Group gap="md" mt="md">
+        <Group gap="md" className={classes.buttons}>
           <Button
             component={Link}
             to="/questions"

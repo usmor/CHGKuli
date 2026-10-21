@@ -32,3 +32,9 @@
     width: 40px;
   }
 }
+
+@media (width <= 768px) {
+  .container :global(.mantine-Carousel-controls) {
+    display: none;
+  }
+}

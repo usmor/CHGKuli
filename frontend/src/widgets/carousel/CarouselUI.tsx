@@ -22,7 +22,7 @@ export const CarouselUI = ({ items }: CarouselUIProps): React.JSX.Element => {
           indicators: classes.indicators,
           indicator: classes.indicator,
         }}
-        slideSize={{ base: '100%', sm: '50%', md: '33.333%' }}
+        slideSize={{ base: '50%', sm: '50%', md: '33.333%' }}
         slideGap="md"
         withControls
         withIndicators

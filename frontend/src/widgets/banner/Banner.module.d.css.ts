@@ -5,5 +5,7 @@ declare const classNames: {
   readonly title: "title";
   readonly stats: "stats";
   readonly video: "video";
+  readonly buttons: "buttons";
+  readonly "mantine-Button-root": "mantine-Button-root";
 };
 export default classNames;
