@@ -47,6 +47,7 @@ async def get_all_questions(
         has_more=offset + limit < total,
     )
 
+
 @router.get("/random", response_model=Question)
 async def get_random_question(session: SessionDep):
     """Получить случайный вопрос."""

@@ -49,8 +49,6 @@ class CRUDQuestion(CRUDBase):
         if exclude_question_ids:
             query = query.where(Question.id.notin_(exclude_question_ids))
 
-        query = query.distinct()
-
         count_result = await session.execute(
             select(func.count()).select_from(query.subquery())
         )
@@ -59,13 +57,14 @@ class CRUDQuestion(CRUDBase):
         if total == 0:
             return []
 
-        offset = random.randint(0, max(0, total - count))
+        query = query.order_by(func.random())
 
         if relations:
-            options = [selectinload(getattr(Question, rel)) for rel in relations]
+            options = [selectinload(getattr(Question, rel))
+                       for rel in relations]
             query = query.options(*options)
 
-        query = query.offset(offset).limit(count)
+        query = query.limit(count)
         result = await session.execute(query)
 
         return list(result.scalars().all())
@@ -92,7 +91,8 @@ class CRUDQuestion(CRUDBase):
 
         query = select(Question).where(Question.id.in_(selected_ids))
         if relations:
-            options = [selectinload(getattr(Question, rel)) for rel in relations]
+            options = [selectinload(getattr(Question, rel))
+                       for rel in relations]
             query = query.options(*options)
 
         result = await session.execute(query)
@@ -172,13 +172,16 @@ class CRUDQuestion(CRUDBase):
             )
             query = query.order_by(author_name_subq)
         elif sort == "tournament":
-            query = query.join(Question.tournament).order_by(asc(Tournament.name))
+            query = query.join(Question.tournament).order_by(
+                asc(Tournament.name))
         else:
-            hash_expr = (cast(Question.id, BigInteger) * 2654435761) % 4294967296
+            hash_expr = (cast(Question.id, BigInteger)
+                         * 2654435761) % 4294967296
             query = query.order_by(hash_expr)
 
         if relations:
-            options = [selectinload(getattr(Question, rel)) for rel in relations]
+            options = [selectinload(getattr(Question, rel))
+                       for rel in relations]
             query = query.options(*options)
 
         query = query.offset(skip).limit(limit)
@@ -195,7 +198,8 @@ class CRUDQuestion(CRUDBase):
         year_to: Optional[int] = None,
         exclude_question_ids: Optional[List[int]] = None,
     ) -> int:
-        query = select(func.count(func.distinct(Question.id))).select_from(Question)
+        query = select(func.count(func.distinct(Question.id))
+                       ).select_from(Question)
 
         if author_ids:
             query = query.join(
