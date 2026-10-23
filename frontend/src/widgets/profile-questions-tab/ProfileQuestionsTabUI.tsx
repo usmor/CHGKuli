@@ -74,7 +74,7 @@ export const ProfileQuestionsTabUI = ({
 
                   <SimpleGrid cols={2}>
                     {questions.map((q) => (
-                      <QuestionCard key={q.id} question={q} width={370} />
+                      <QuestionCard key={q.id} question={q}/>
                     ))}
                   </SimpleGrid>
                 </>
