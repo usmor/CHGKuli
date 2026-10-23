@@ -1,7 +1,7 @@
 # 🎲 CHGKuli
 
 > **Web application for playing "What? Where? When?"** — a popular Russian intellectual quiz game.
-> Built on a dataset of **330,000+ questions** from over **5,500 tournaments**.
+> Built on a dataset of **200,000+ questions** from over **4,000 tournaments**.
 
 🔗 **[Live Demo](https://chgkuli.up.railway.app/)** · **[API Docs (Swagger)](https://chgkuli-production.up.railway.app/docs)**
 
